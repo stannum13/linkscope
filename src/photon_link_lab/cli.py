@@ -21,10 +21,12 @@ from photon_link_lab.plots import (
     save_drift_sweep,
     save_eye_diagram,
     save_ring_fit,
+    save_wdm_sweep,
     save_yield_histogram,
 )
 from photon_link_lab.sweeps import monte_carlo_yield, sweep_thermal_drift, sweep_tx_power, write_csv
 from photon_link_lab.units import linear_to_db
+from photon_link_lab.wdm import simulate_wdm
 
 
 def _write_json(path: str | Path, payload: dict) -> None:
@@ -139,6 +141,27 @@ def yield_cmd(args: argparse.Namespace) -> None:
     )
 
 
+def wdm_cmd(args: argparse.Namespace) -> None:
+    cfg = LinkConfig(n_symbols=args.symbols)
+    rows = simulate_wdm(cfg=cfg)
+    write_csv(args.out, rows)
+    if args.plot:
+        save_wdm_sweep(rows, args.plot)
+    worst = max(rows, key=lambda row: row["ber"])
+    print(
+        json.dumps(
+            {
+                "rows": len(rows),
+                "worst_channel": worst["channel"],
+                "worst_channel_ber": worst["ber"],
+                "csv": args.out,
+                "plot": args.plot,
+            },
+            indent=2,
+        )
+    )
+
+
 def benchmark_cmd(args: argparse.Namespace) -> None:
     root = Path(args.out)
     artifacts = Path(args.artifacts)
@@ -170,6 +193,10 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
     write_csv(root / "yield_monte_carlo.csv", yield_rows)
     save_yield_histogram(yield_rows, plots / "yield_histogram.png")
 
+    wdm_rows = simulate_wdm(cfg=LinkConfig(n_symbols=args.yield_symbols))
+    write_csv(root / "wdm_sweep.csv", wdm_rows)
+    save_wdm_sweep(wdm_rows, plots / "wdm_channel_ber.png")
+
     calibration = fit_ring_from_measurements(measured_path)
     write_calibration(artifacts / "calibration.json", calibration)
     data = read_measurements(measured_path)
@@ -199,6 +226,7 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
             "tx_power_sweep": str(root / "tx_power_sweep.csv"),
             "thermal_drift_sweep": str(root / "thermal_drift_sweep.csv"),
             "yield_monte_carlo": str(root / "yield_monte_carlo.csv"),
+            "wdm_sweep": str(root / "wdm_sweep.csv"),
             "link_metrics": str(artifacts / "link_metrics.json"),
             "calibration": str(artifacts / "calibration.json"),
             "heater_tuning": str(artifacts / "heater_tuning.json"),
@@ -217,6 +245,7 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     sweep_src = Path(args.sweep).as_posix()
     calibration_src = Path(args.calibration).as_posix()
     yield_src = Path(args.yield_plot).as_posix()
+    wdm_src = Path(args.wdm).as_posix()
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -237,6 +266,7 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     <section><h2>Power Sweep</h2><img src="{sweep_src}" alt="BER sweep"></section>
     <section><h2>Calibration</h2><img src="{calibration_src}" alt="Calibration fit"></section>
     <section><h2>Yield</h2><img src="{yield_src}" alt="Yield histogram"></section>
+    <section><h2>WDM</h2><img src="{wdm_src}" alt="WDM channel metrics"></section>
   </div>
   <h2>Latest Metrics</h2>
   <pre>{json.dumps(metrics, indent=2)}</pre>
@@ -311,6 +341,12 @@ def build_parser() -> argparse.ArgumentParser:
     yield_parser.add_argument("--ber-limit", type=float, default=1e-3)
     yield_parser.set_defaults(func=yield_cmd)
 
+    wdm = sub.add_parser("wdm", help="run a WDM crosstalk/dispersion channel sweep")
+    wdm.add_argument("--out", default="data/benchmarks/wdm_sweep.csv")
+    wdm.add_argument("--plot", default="plots/wdm_channel_ber.png")
+    wdm.add_argument("--symbols", type=int, default=1024)
+    wdm.set_defaults(func=wdm_cmd)
+
     benchmark = sub.add_parser(
         "benchmark",
         help="regenerate canonical datasets, plots, and reports",
@@ -331,6 +367,7 @@ def build_parser() -> argparse.ArgumentParser:
     dash.add_argument("--sweep", default="../../plots/ber_vs_power.png")
     dash.add_argument("--calibration", default="../../plots/calibration_fit.png")
     dash.add_argument("--yield-plot", default="../../plots/yield_histogram.png")
+    dash.add_argument("--wdm", default="../../plots/wdm_channel_ber.png")
     dash.set_defaults(func=dashboard_cmd)
     return parser
 

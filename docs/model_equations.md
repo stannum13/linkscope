@@ -71,6 +71,28 @@ sigma_total = sqrt(sigma_shot^2 + sigma_thermal^2 + sigma_RIN^2)
 The baseline shot-noise model uses average photocurrent for speed and
 determinism. A sample-dependent variant is a planned refinement.
 
+## WDM Crosstalk And Dispersion
+
+Channel wavelengths are spaced by converting frequency spacing to wavelength:
+
+```text
+delta_lambda ~= lambda_center^2 / c * delta_f
+```
+
+The WDM crosstalk matrix uses mux insertion loss on the diagonal and configured
+adjacent/non-adjacent leakage terms off diagonal:
+
+```text
+P_out[i] = sum_j C[i,j] P_in[j]
+```
+
+First-order dispersion spread is reported in unit intervals:
+
+```text
+spread_ps = |D| * spectral_width_nm * fiber_length_km
+dispersion_ui = spread_ps / UI_ps
+```
+
 ## Equalizer
 
 The feed-forward equalizer solves:

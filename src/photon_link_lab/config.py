@@ -63,6 +63,18 @@ class VariationConfig:
 
 
 @dataclass(frozen=True)
+class WDMConfig:
+    n_channels: int = 4
+    channel_spacing_ghz: float = 100.0
+    center_wavelength_nm: float = 1310.0
+    mux_loss_db: float = 1.0
+    adjacent_crosstalk_db: float = -25.0
+    nonadjacent_crosstalk_db: float = -35.0
+    dispersion_ps_per_nm_km: float = 0.0
+    fiber_length_km: float = 0.5
+
+
+@dataclass(frozen=True)
 class CalibrationResult:
     insertion_loss_db: float
     extinction_ratio_db: float

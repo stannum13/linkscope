@@ -200,8 +200,10 @@ Goal: extend beyond the base artifact only with tests and visible results.
 
 Level 5 WDM:
 
-- Add `WDMConfig`, crosstalk matrix, channel spacing, and first-order dispersion.
-- Validate one-channel equivalence and crosstalk penalty trends.
+- Baseline complete: `WDMConfig`, crosstalk matrix, channel spacing,
+  first-order dispersion penalty, WDM CLI, CSV, plot, and tests.
+- Next refinement: couple crosstalk into waveform-level optical power instead
+  of applying a channel metric penalty.
 
 Level 6 process variation:
 

@@ -7,6 +7,7 @@
     "tx_power_sweep": "data/benchmarks/tx_power_sweep.csv",
     "thermal_drift_sweep": "data/benchmarks/thermal_drift_sweep.csv",
     "yield_monte_carlo": "data/benchmarks/yield_monte_carlo.csv",
+    "wdm_sweep": "data/benchmarks/wdm_sweep.csv",
     "link_metrics": "artifacts/demo/link_metrics.json",
     "calibration": "artifacts/demo/calibration.json",
     "heater_tuning": "artifacts/demo/heater_tuning.json",

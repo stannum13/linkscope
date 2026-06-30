@@ -13,6 +13,7 @@ Expected files:
 - `tx_power_sweep.csv`
 - `thermal_drift_sweep.csv`
 - `yield_monte_carlo.csv`
+- `wdm_sweep.csv`
 - `manifest.json`
 
 These files are small enough to review and version. Larger sweeps should be

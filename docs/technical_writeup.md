@@ -7,7 +7,8 @@ interconnects. It models a complete PAM2/PAM4 link from generated symbols
 through electrical driver, microring or MZI modulation, optical loss,
 photodetection, receiver noise, equalization, and BER/eye metrics. The package
 also includes synthetic measured data generation, least-squares calibration, and
-a heater tuning search for drift compensation.
+a heater tuning search for drift compensation. A first-order WDM helper models
+channel wavelength spacing, mux loss, crosstalk, and dispersion UI penalty.
 
 The goal is architecture exploration and validation workflow prototyping. It is
 not a replacement for electromagnetic simulation, SPICE, Verilog-A signoff, or
@@ -65,6 +66,7 @@ The test suite checks:
 - MZI transfer bounds;
 - channel loss and link-budget trends;
 - finite end-to-end ring/MZI simulation results;
+- WDM wavelength spacing and crosstalk matrix behavior;
 - synthetic calibration recovery;
 - CLI smoke paths and benchmark artifact generation.
 

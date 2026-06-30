@@ -70,6 +70,17 @@ def test_cli_smoke_paths(tmp_path) -> None:
     )
     assert (tmp_path / "yield.csv").exists()
 
+    run_cli(
+        "wdm",
+        "--symbols",
+        "64",
+        "--out",
+        str(tmp_path / "wdm.csv"),
+        "--plot",
+        str(tmp_path / "wdm.png"),
+    )
+    assert (tmp_path / "wdm.csv").exists()
+
 
 def test_cli_benchmark_smoke(tmp_path) -> None:
     run_cli(
@@ -91,5 +102,6 @@ def test_cli_benchmark_smoke(tmp_path) -> None:
     )
     assert (tmp_path / "bench" / "manifest.json").exists()
     assert (tmp_path / "bench" / "tx_power_sweep.csv").exists()
+    assert (tmp_path / "bench" / "wdm_sweep.csv").exists()
     assert (tmp_path / "artifacts" / "link_metrics.json").exists()
     assert (tmp_path / "plots" / "eye_diagram.png").exists()

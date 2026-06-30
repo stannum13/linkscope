@@ -125,3 +125,25 @@ def save_yield_histogram(rows: list[dict[str, float]], path: str | Path) -> Path
     fig.savefig(path)
     plt.close(fig)
     return path
+
+
+def save_wdm_sweep(rows: list[dict[str, float]], path: str | Path) -> Path:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    channels = np.asarray([row["channel"] for row in rows])
+    ber = np.asarray([max(row["ber"], 1e-6) for row in rows])
+    q = np.asarray([row["q_factor_eye"] for row in rows])
+    fig, ax1 = plt.subplots(figsize=(7.0, 4.2), dpi=150)
+    ax1.semilogy(channels, ber, marker="o", color="#b42318")
+    ax1.set_xlabel("WDM channel")
+    ax1.set_ylabel("BER")
+    ax1.set_xticks(channels)
+    ax1.grid(True, which="both", alpha=0.25)
+    ax2 = ax1.twinx()
+    ax2.plot(channels, q, marker="s", color="#2458a6")
+    ax2.set_ylabel("Eye Q")
+    ax1.set_title("WDM channel metrics")
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    return path

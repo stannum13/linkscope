@@ -46,6 +46,7 @@ photon-link calibrate --data data/measured/fake_measured_ring_sweep.csv
 photon-link sweep --out data/benchmarks/tx_power_sweep.csv
 photon-link drift --out data/benchmarks/thermal_drift_sweep.csv
 photon-link yield --out data/benchmarks/yield_monte_carlo.csv
+photon-link wdm --out data/benchmarks/wdm_sweep.csv
 photon-link tune --thermal-shift-nm 0.12
 photon-link benchmark
 ```
@@ -111,6 +112,7 @@ It regenerates:
 | TX power sweep | `data/benchmarks/tx_power_sweep.csv` |
 | Thermal drift sweep | `data/benchmarks/thermal_drift_sweep.csv` |
 | Monte Carlo yield | `data/benchmarks/yield_monte_carlo.csv` |
+| WDM channel sweep | `data/benchmarks/wdm_sweep.csv` |
 | Link metrics | `artifacts/demo/link_metrics.json` |
 | Calibration result | `artifacts/demo/calibration.json` |
 | Heater tuning result | `artifacts/demo/heater_tuning.json` |
@@ -141,6 +143,8 @@ Representative plots:
 
 ![Yield histogram](plots/yield_histogram.png)
 
+![WDM channel BER](plots/wdm_channel_ber.png)
+
 ## Implemented Scope
 
 Base optical interconnect:
@@ -154,6 +158,8 @@ Base optical interconnect:
 - Feed-forward equalizer.
 - Eye diagram, eye-Q metrics, empirical SER/BER, and link budget.
 - Parameter sweeps, thermal drift sweeps, and Monte Carlo device variability.
+- WDM channel wavelength spacing, crosstalk matrix, and first-order dispersion
+  penalty reporting.
 - Fake measured ring data and least-squares ring calibration.
 - Coarse-to-fine heater tuning search for resonance locking.
 - Compact JSON export for behavioral model parameters.
@@ -166,7 +172,7 @@ Physics ladder status:
 | 2 ring transfer, detuning, Q, FSR, linewidth | Implemented |
 | 3 thermal drift, heater tuning, actuator limits | Implemented baseline |
 | 4 shot, thermal, RIN, quantization, jitter | Implemented baseline |
-| 5 WDM, crosstalk, dispersion | Planned |
+| 5 WDM, crosstalk, dispersion | Baseline implemented |
 | 6 process/wafer statistics | Monte Carlo baseline implemented; wafer hierarchy planned |
 | 7 compact models | JSON export implemented; Verilog-A-style export planned |
 | 8 real/published data calibration | Synthetic calibration implemented; real/published adapter planned |

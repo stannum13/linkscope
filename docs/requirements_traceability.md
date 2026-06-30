@@ -56,7 +56,7 @@ tests, and acceptance criteria.
 | "Level 2: ring resonator transfer function, detuning, Q factor, FSR, linewidth." | Implement ring metrics and validation | `devices.py`, `docs/model_equations.md`, ring transfer plot. |
 | "Level 3: thermal drift, heater tuning, actuator limits, phase noise." | Implement drift/heater and document phase noise field | Drift CSV, heater tuning JSON, tests. |
 | "Level 4: shot noise, thermal noise, RIN, quantization noise, jitter." | Implement and ablate | Noise metrics JSON, noise ablation CSV/plot. |
-| "Level 5: wavelength-division multiplexing, channel crosstalk, dispersion." | Planned extension after base artifact | `WDMConfig`, WDM benchmark, crosstalk plot. |
+| "Level 5: wavelength-division multiplexing, channel crosstalk, dispersion." | Baseline implemented | `WDMConfig`, `wdm.py`, `data/benchmarks/wdm_sweep.csv`, `plots/wdm_channel_ber.png`. |
 | "Level 6: process variation, die-to-die and wafer-level statistics." | Implement Monte Carlo first, wafer map later | `VariationConfig`, yield CSV, wafer map plot. |
 | "Level 7: Verilog-A-style behavioral models or exportable compact models." | JSON compact model now; optional Verilog-A-style text later | `compact_model.py`, `artifacts/compact_model.json`. |
 | "Level 8: calibration against real or published measurement data." | Synthetic first; real/published adapter later | Calibration report, source metadata, cited fixture when available. |
