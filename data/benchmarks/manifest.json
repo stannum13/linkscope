@@ -1,0 +1,15 @@
+{
+  "benchmark": "photon-link-lab.v1",
+  "symbols": 512,
+  "yield_samples": 8,
+  "artifacts": {
+    "measured_data": "data/measured/fake_measured_ring_sweep.csv",
+    "tx_power_sweep": "data/benchmarks/tx_power_sweep.csv",
+    "thermal_drift_sweep": "data/benchmarks/thermal_drift_sweep.csv",
+    "yield_monte_carlo": "data/benchmarks/yield_monte_carlo.csv",
+    "link_metrics": "artifacts/demo/link_metrics.json",
+    "calibration": "artifacts/demo/calibration.json",
+    "heater_tuning": "artifacts/demo/heater_tuning.json",
+    "plots": "plots"
+  }
+}

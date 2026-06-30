@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Photon Link Lab Dashboard</title>
+  <style>
+    body { font-family: Inter, Arial, sans-serif; margin: 32px; color: #172033; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px; }
+    img { max-width: 100%; border: 1px solid #d0d5dd; }
+    pre { background: #f6f8fa; padding: 16px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Photon Link Lab Dashboard</h1>
+  <div class="grid">
+    <section><h2>Eye Diagram</h2><img src="../../plots/eye_diagram.png" alt="Eye diagram"></section>
+    <section><h2>Power Sweep</h2><img src="../../plots/ber_vs_power.png" alt="BER sweep"></section>
+    <section><h2>Calibration</h2><img src="../../plots/calibration_fit.png" alt="Calibration fit"></section>
+    <section><h2>Yield</h2><img src="../../plots/yield_histogram.png" alt="Yield histogram"></section>
+  </div>
+  <h2>Latest Metrics</h2>
+  <pre>{
+  "metrics": {
+    "ber": 0.1220703125,
+    "ser": 0.244140625,
+    "symbol_rate_gbaud": 56.0,
+    "line_rate_gbps": 112.0,
+    "rx_voltage_pp_mV": 176.79623379106047,
+    "equalizer_taps": 7.0,
+    "min_eye_opening": 0.5556105338612203,
+    "mean_eye_opening": 0.567177350311931,
+    "q_factor_eye": 0.9996480418593198,
+    "mean_current_a": 0.00021542771261084186,
+    "shot_noise_a_rms": 1.5320059016648317e-06,
+    "rin_noise_a_rms": 1.2561486290503771e-06,
+    "total_noise_a_rms": 2.484944961362528e-06
+  },
+  "budget": {
+    "laser_power_dbm": 2.0,
+    "modulator_output_dbm": -3.231276076630618,
+    "passive_loss_db": 2.6,
+    "rx_optical_power_dbm": -5.831276076630618,
+    "photocurrent_uA": 214.13430326865398,
+    "tia_output_mV": 256.9611639223848,
+    "static_margin_db": 10.296562490566735
+  }
+}</pre>
+</body>
+</html>

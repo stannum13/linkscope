@@ -1,0 +1,31 @@
+{
+  "format": "photon-link-lab.compact.v1",
+  "model": {
+    "modulator": {
+      "kind": "ring",
+      "insertion_loss_db": 1.8,
+      "extinction_ratio_db": 6.5,
+      "vpi_v": 1.2,
+      "phase_bias_rad": 1.57079632679,
+      "q_factor": 8500.0,
+      "resonance_wavelength_nm": 1310.05,
+      "fsr_nm": 8.0,
+      "tuning_efficiency_nm_per_mw": 0.075,
+      "voltage_tuning_nm_per_v": 0.055,
+      "heater_max_mw": 18.0,
+      "heater_mw": 0.0,
+      "phase_noise_rad": 0.0
+    },
+    "link": {
+      "symbol_rate_gbaud": 56.0,
+      "responsivity_a_per_w": 0.82,
+      "rx_bandwidth_ghz": 34.0,
+      "driver_bandwidth_ghz": 38.0,
+      "losses_db": {
+        "waveguide": 1.2,
+        "fiber": 0.8,
+        "connector": 0.6
+      }
+    }
+  }
+}

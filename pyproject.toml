@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "photon-link-lab"
+version = "0.1.0"
+description = "Python/JAX silicon-photonic optical link simulator with calibration and ML tuning hooks."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Photon Link Lab" }]
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+jax = ["jax>=0.4.28"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+photon-link = "photon_link_lab.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/photon_link_lab"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

@@ -1,0 +1,8 @@
+{
+  "insertion_loss_db": 1.7927324436801522,
+  "extinction_ratio_db": 6.516123313212956,
+  "q_factor": 8461.03215745022,
+  "resonance_wavelength_nm": 1310.0497900996493,
+  "rmse_db": 0.08251356874357788,
+  "n_points": 644
+}
