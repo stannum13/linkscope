@@ -162,6 +162,8 @@ Base optical interconnect:
   penalty reporting.
 - Fake measured ring data and least-squares ring calibration.
 - Coarse-to-fine heater tuning search for resonance locking.
+- Deterministic ridge surrogate for log10 clipped BER and eye-Q prediction from
+  generated simulator samples.
 - Compact JSON export for behavioral model parameters.
 
 Physics ladder status:
@@ -183,7 +185,7 @@ ML ladder status:
 |---|---|
 | 1 regression fit of physical parameters | Implemented |
 | 2 heater tuning / resonance locking | Coarse-to-fine implemented; true BO planned |
-| 3 neural surrogate | Planned |
+| 3 BER/Q surrogate | Deterministic ridge baseline implemented; neural model planned |
 | 4 uncertainty quantification | Planned |
 | 5 active learning | Planned |
 | 6 differentiable JAX optimization | Planned for smooth kernels |
