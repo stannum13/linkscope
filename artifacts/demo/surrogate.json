@@ -1,0 +1,159 @@
+{
+  "format": "photon-link-lab.surrogate.ber-q.v1",
+  "feature_names": [
+    "tx_laser_power_dbm",
+    "drive_vpp",
+    "driver_noise_vrms",
+    "jitter_ui",
+    "insertion_loss_db",
+    "ring_q_factor_1e3",
+    "effective_detuning_nm",
+    "abs_effective_detuning_nm",
+    "effective_detuning_nm_sq",
+    "normalized_detuning",
+    "abs_normalized_detuning",
+    "normalized_detuning_sq"
+  ],
+  "target_names": [
+    "log10_ber",
+    "q_factor_eye"
+  ],
+  "design_parameter_names": [
+    "tx_laser_power_dbm",
+    "drive_vpp",
+    "thermal_shift_nm",
+    "heater_mw",
+    "wavelength_nm",
+    "driver_noise_vrms",
+    "jitter_ui",
+    "ring_q_factor",
+    "insertion_loss_db"
+  ],
+  "metrics": {
+    "n_samples": 24,
+    "n_train": 18,
+    "n_test": 6,
+    "train": {
+      "mae": {
+        "log10_ber": 0.022631968407773415,
+        "q_factor_eye": 0.06811119428546922
+      },
+      "rmse": {
+        "log10_ber": 0.03097209090349745,
+        "q_factor_eye": 0.09350655571696892
+      },
+      "max_abs_error": {
+        "log10_ber": 0.07173170751921032,
+        "q_factor_eye": 0.2143834953351677
+      }
+    },
+    "test": {
+      "mae": {
+        "log10_ber": 0.3429767056015855,
+        "q_factor_eye": 1.057133361012797
+      },
+      "rmse": {
+        "log10_ber": 0.37870284872145143,
+        "q_factor_eye": 1.2013142071421563
+      },
+      "max_abs_error": {
+        "log10_ber": 0.5747132802651534,
+        "q_factor_eye": 2.1379593156398427
+      }
+    },
+    "mae_log10_ber": 0.3429767056015855,
+    "mae_q_factor_eye": 1.057133361012797,
+    "rmse_log10_ber": 0.37870284872145143,
+    "rmse_q_factor_eye": 1.2013142071421563
+  },
+  "model": {
+    "format": "photon-link-lab.surrogate.ber-q.v1",
+    "feature_names": [
+      "tx_laser_power_dbm",
+      "drive_vpp",
+      "driver_noise_vrms",
+      "jitter_ui",
+      "insertion_loss_db",
+      "ring_q_factor_1e3",
+      "effective_detuning_nm",
+      "abs_effective_detuning_nm",
+      "effective_detuning_nm_sq",
+      "normalized_detuning",
+      "abs_normalized_detuning",
+      "normalized_detuning_sq"
+    ],
+    "target_names": [
+      "log10_ber",
+      "q_factor_eye"
+    ],
+    "ridge_alpha": 1e-06,
+    "ber_clip": {
+      "min": 1e-05,
+      "max": 0.5
+    },
+    "feature_mean": [
+      0.9166666666666669,
+      0.8604166666666667,
+      0.030555555555555558,
+      0.0175,
+      2.1111111111111107,
+      8.875,
+      -0.15925925925916495,
+      0.2328703703703502,
+      0.06843942901232844,
+      -1.1329790918349618,
+      1.568227181037561,
+      3.156499038484524
+    ],
+    "feature_scale": [
+      1.9132038969316802,
+      0.2510049246971506,
+      0.01655809544275422,
+      0.00818885166959731,
+      0.5808478796201801,
+      1.7219981933143187,
+      0.2075473858003288,
+      0.11920914233356592,
+      0.05753834755948574,
+      1.3685238090546141,
+      0.83496260224007,
+      2.6379470845973967
+    ],
+    "coefficients": {
+      "log10_ber": {
+        "intercept": -0.6070481103513236,
+        "tx_laser_power_dbm": 0.013764035633122193,
+        "drive_vpp": -0.014653611288254747,
+        "driver_noise_vrms": -0.02889243378675281,
+        "jitter_ui": -0.020797516360045305,
+        "insertion_loss_db": -0.021467530988902413,
+        "ring_q_factor_1e3": 0.42399996004558527,
+        "effective_detuning_nm": 0.015726057098119875,
+        "abs_effective_detuning_nm": 1.7950132099872074,
+        "effective_detuning_nm_sq": -0.6302695669874923,
+        "normalized_detuning": -0.047368692870768045,
+        "abs_normalized_detuning": -1.698516470148825,
+        "normalized_detuning_sq": 0.5447855290566935
+      },
+      "q_factor_eye": {
+        "intercept": 0.3685762039477202,
+        "tx_laser_power_dbm": -0.028638130349025577,
+        "drive_vpp": 0.01980625922182043,
+        "driver_noise_vrms": 0.14972583700008138,
+        "jitter_ui": 0.15784048368477055,
+        "insertion_loss_db": 0.055186185593642405,
+        "ring_q_factor_1e3": -1.3670123209154585,
+        "effective_detuning_nm": -0.39843365266691877,
+        "abs_effective_detuning_nm": -4.975819583486604,
+        "effective_detuning_nm_sq": 1.3624728585697536,
+        "normalized_detuning": 0.6140109504455966,
+        "abs_normalized_detuning": 5.135057695561599,
+        "normalized_detuning_sq": -1.2960833058038899
+      }
+    },
+    "feature_reference": {
+      "resonance_wavelength_nm": 1310.05,
+      "tuning_efficiency_nm_per_mw": 0.075
+    }
+  }
+}

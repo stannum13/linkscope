@@ -81,6 +81,30 @@ def test_cli_smoke_paths(tmp_path) -> None:
     )
     assert (tmp_path / "wdm.csv").exists()
 
+    run_cli(
+        "wafer",
+        "--out",
+        str(tmp_path / "wafer.csv"),
+        "--summary",
+        str(tmp_path / "wafer.json"),
+        "--plot",
+        str(tmp_path / "wafer.png"),
+    )
+    assert (tmp_path / "wafer.csv").exists()
+    assert (tmp_path / "wafer.json").exists()
+
+    run_cli(
+        "cpo",
+        "--out",
+        str(tmp_path / "cpo.csv"),
+        "--summary",
+        str(tmp_path / "cpo.json"),
+        "--plot",
+        str(tmp_path / "cpo.png"),
+    )
+    assert (tmp_path / "cpo.csv").exists()
+    assert (tmp_path / "cpo.json").exists()
+
 
 def test_cli_benchmark_smoke(tmp_path) -> None:
     run_cli(
@@ -103,5 +127,7 @@ def test_cli_benchmark_smoke(tmp_path) -> None:
     assert (tmp_path / "bench" / "manifest.json").exists()
     assert (tmp_path / "bench" / "tx_power_sweep.csv").exists()
     assert (tmp_path / "bench" / "wdm_sweep.csv").exists()
+    assert (tmp_path / "bench" / "wafer_grid.csv").exists()
+    assert (tmp_path / "bench" / "cpo_scenarios.csv").exists()
     assert (tmp_path / "artifacts" / "link_metrics.json").exists()
     assert (tmp_path / "plots" / "eye_diagram.png").exists()

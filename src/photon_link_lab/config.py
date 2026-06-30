@@ -70,6 +70,7 @@ class WDMConfig:
     mux_loss_db: float = 1.0
     adjacent_crosstalk_db: float = -25.0
     nonadjacent_crosstalk_db: float = -35.0
+    crosstalk_penalty_coefficient: float = 10.0
     dispersion_ps_per_nm_km: float = 0.0
     fiber_length_km: float = 0.5
 

@@ -57,8 +57,8 @@ tests, and acceptance criteria.
 | "Level 3: thermal drift, heater tuning, actuator limits, phase noise." | Implement drift/heater and document phase noise field | Drift CSV, heater tuning JSON, tests. |
 | "Level 4: shot noise, thermal noise, RIN, quantization noise, jitter." | Implement and ablate | Noise metrics JSON, noise ablation CSV/plot. |
 | "Level 5: wavelength-division multiplexing, channel crosstalk, dispersion." | Baseline implemented | `WDMConfig`, `wdm.py`, `data/benchmarks/wdm_sweep.csv`, `plots/wdm_channel_ber.png`. |
-| "Level 6: process variation, die-to-die and wafer-level statistics." | Implement Monte Carlo first, wafer map later | `VariationConfig`, yield CSV, wafer map plot. |
-| "Level 7: Verilog-A-style behavioral models or exportable compact models." | JSON compact model now; optional Verilog-A-style text later | `compact_model.py`, `artifacts/compact_model.json`. |
+| "Level 6: process variation, die-to-die and wafer-level statistics." | Baseline implemented | `VariationConfig`, `variation.py`, yield CSV, wafer grid CSV, wafer map plot. |
+| "Level 7: Verilog-A-style behavioral models or exportable compact models." | Baseline implemented | `compact_model.py`, `artifacts/demo/compact_model.json`, `artifacts/demo/ring_behavioral.va`. |
 | "Level 8: calibration against real or published measurement data." | Synthetic first; real/published adapter later | Calibration report, source metadata, cited fixture when available. |
 
 ## ML/AI Complexity Ladder
@@ -67,7 +67,7 @@ tests, and acceptance criteria.
 |---|---|---|
 | "Level 1: regression to fit physical model parameters." | Required base ML feature | `calibration.py`, calibration fit plot, recovery test. |
 | "Level 2: Bayesian optimization for heater tuning / resonance locking." | Implement real BO or rename current search as coarse-to-fine | Heater tuning JSON, baseline comparison. |
-| "Level 3: neural surrogate for fast BER prediction." | Staged extension with train/test split | Surrogate dataset, parity plot, error JSON. |
+| "Level 3: neural surrogate for fast BER prediction." | Lightweight ridge surrogate baseline implemented; neural surrogate planned | `surrogate.py`, surrogate JSON, parity plot, tests. |
 | "Level 4: uncertainty quantification for yield prediction." | Staged extension | Yield CI JSON, uncertainty plot. |
 | "Level 5: active learning: choose next measurement points to reduce model uncertainty." | Staged extension | Active learning convergence CSV/plot. |
 | "Level 6: differentiable link optimization in JAX." | Staged extension around smooth kernels | JAX gradient tests, optimization report. |
@@ -81,5 +81,5 @@ tests, and acceptance criteria.
 | "Optical link modeling" | End-to-end signal-chain diagram, link simulation, link budget. |
 | "silicon validation" | Calibration workflow, fake measured data, parameter recovery tests. |
 | "photonics test" | Ring wavelength/heater sweep, fit residuals, calibration report. |
-| "AI interconnect systems" | Heater tuning, surrogate/UQ/active-learning roadmap. |
+| "AI interconnect systems" | CPO scenario benchmark, WDM channel benchmark, package-power/latency assumptions, heater and calibration workflows. |
 | "hardware/software simulation" | Package, CLI, compact model export, CI, benchmark artifacts. |

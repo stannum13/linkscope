@@ -51,6 +51,39 @@ ER_floor = 10^(-ER_dB / 10)
 T_mzi = 10^(-IL_dB / 10) * [ER_floor + (1 - ER_floor) * 0.5 * (1 + cos(phi))]
 ```
 
+## Compact Model Exchange
+
+Compact JSON exports remain versioned with:
+
+```text
+format = photon-link-lab.compact.v1
+```
+
+The v1 payload contains `model.modulator`, the compact `model.link` behavioral
+fields, and unit metadata. `load_compact_model()` restores a `ModulatorConfig`
+and `LinkConfig`; it also supports older v1 files that only contain the compact
+`model.link` subset.
+
+The Verilog-A-style text export mirrors the same coefficients as parameter
+declarations with units. Ring exports include:
+
+```text
+q_factor                              unitless
+resonance_wavelength_nm               nm
+fsr_nm                                nm
+tuning_efficiency_nm_per_mw           nm/mW
+voltage_tuning_nm_per_v               nm/V
+heater_mw, heater_max_mw              mW
+```
+
+MZI exports include:
+
+```text
+vpi_v              V
+phase_bias_rad     rad
+phase_noise_rad    rad
+```
+
 ## Link Budget
 
 ```text

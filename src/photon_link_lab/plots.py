@@ -147,3 +147,72 @@ def save_wdm_sweep(rows: list[dict[str, float]], path: str | Path) -> Path:
     fig.savefig(path)
     plt.close(fig)
     return path
+
+
+def save_surrogate_parity(
+    targets: np.ndarray,
+    predictions: np.ndarray,
+    path: str | Path,
+) -> Path:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, axes = plt.subplots(1, 2, figsize=(8.0, 3.8), dpi=150)
+    labels = ["log10(BER)", "Eye Q"]
+    for i, ax in enumerate(axes):
+        true = np.asarray(targets)[:, i]
+        pred = np.asarray(predictions)[:, i]
+        lo = float(min(np.min(true), np.min(pred)))
+        hi = float(max(np.max(true), np.max(pred)))
+        ax.scatter(true, pred, s=18, color="#2458a6", alpha=0.75)
+        ax.plot([lo, hi], [lo, hi], color="#b42318", linewidth=1.0)
+        ax.set_xlabel(f"Simulator {labels[i]}")
+        ax.set_ylabel(f"Surrogate {labels[i]}")
+        ax.grid(True, alpha=0.25)
+    fig.suptitle("Surrogate held-out parity")
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    return path
+
+
+def save_wafer_map(
+    matrix: np.ndarray,
+    path: str | Path,
+    title: str = "Wafer yield score",
+) -> Path:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(5.4, 4.8), dpi=150)
+    image = ax.imshow(matrix, cmap="viridis", vmin=0.0, vmax=1.0)
+    ax.set_xlabel("Die column")
+    ax.set_ylabel("Die row")
+    ax.set_title(title)
+    fig.colorbar(image, ax=ax, label="Yield score")
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    return path
+
+
+def save_cpo_benchmark(rows: list[dict[str, float | str]], path: str | Path) -> Path:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    names = [str(row["name"]) for row in rows]
+    energy = np.asarray([float(row["energy_pj_per_bit"]) for row in rows])
+    latency = np.asarray([float(row["latency_ns"]) for row in rows])
+    x = np.arange(len(rows))
+    fig, ax1 = plt.subplots(figsize=(7.0, 4.2), dpi=150)
+    width = 0.36
+    ax1.bar(x - width / 2, energy, width=width, color="#2458a6", label="pJ/bit")
+    ax1.set_ylabel("Energy (pJ/bit)")
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(names, rotation=12, ha="right")
+    ax1.grid(True, axis="y", alpha=0.25)
+    ax2 = ax1.twinx()
+    ax2.bar(x + width / 2, latency, width=width, color="#b42318", label="latency")
+    ax2.set_ylabel("Latency (ns)")
+    ax1.set_title("CPO architecture scenario benchmark")
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    return path

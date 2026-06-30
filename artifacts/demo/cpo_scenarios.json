@@ -1,0 +1,38 @@
+{
+  "scenarios": [
+    {
+      "name": "pluggable_retimed",
+      "aggregate_bandwidth_tbps": 100.0,
+      "lane_rate_gbps": 200.0,
+      "lanes": 500.0,
+      "wdm_channels": 8.0,
+      "copper_trace_cm": 42.0,
+      "electrical_loss_db": 7.56,
+      "retimers_per_lane": 0.0,
+      "retimer_total": 0.0,
+      "energy_pj_per_bit": 13.118625,
+      "package_power_w": 1311.8625,
+      "latency_ns": 4.59,
+      "heater_power_w": 0.75,
+      "link_margin_proxy_db": 0.4400000000000004,
+      "pluggable_optics": 1.0
+    },
+    {
+      "name": "cpo_optical_io",
+      "aggregate_bandwidth_tbps": 100.0,
+      "lane_rate_gbps": 200.0,
+      "lanes": 500.0,
+      "wdm_channels": 8.0,
+      "copper_trace_cm": 5.0,
+      "electrical_loss_db": 0.8999999999999999,
+      "retimers_per_lane": 0.0,
+      "retimer_total": 0.0,
+      "energy_pj_per_bit": 8.173625,
+      "package_power_w": 817.3625,
+      "latency_ns": 2.74,
+      "heater_power_w": 0.75,
+      "link_margin_proxy_db": 7.1,
+      "pluggable_optics": 0.0
+    }
+  ]
+}

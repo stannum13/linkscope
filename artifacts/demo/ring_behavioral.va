@@ -1,0 +1,40 @@
+// Photon Link Lab behavioral compact model
+// Verilog-A-style parameter export; not foundry-ready Verilog-A.
+// format: photon-link-lab.compact.v1
+// Units are shown on each parameter declaration.
+// modulator_kind: ring
+module photon_link_lab_ring_behavioral(optical_in, optical_out, drive);
+  inout optical_in, optical_out, drive;
+  // Ports are placeholders for downstream Verilog-A discipline binding.
+
+  parameter real insertion_loss_db = 1.8; // dB - modulator insertion loss
+  parameter real extinction_ratio_db = 6.5; // dB - modulator extinction ratio
+  parameter real symbol_rate_gbaud = 56; // Gbaud - link symbol rate
+  parameter real wavelength_nm = 1310; // nm - laser wavelength
+  parameter real driver_bandwidth_ghz = 38; // GHz - electrical driver 3 dB bandwidth
+  parameter real rx_bandwidth_ghz = 34; // GHz - receiver 3 dB bandwidth
+  parameter real responsivity_a_per_w = 0.82; // A/W - photodiode responsivity
+  parameter real waveguide_loss_db = 1.2; // dB - waveguide loss
+  parameter real fiber_loss_db = 0.8; // dB - fiber loss
+  parameter real connector_loss_db = 0.6; // dB - connector loss
+
+  parameter real q_factor = 8500; // unitless - loaded quality factor
+  parameter real resonance_wavelength_nm = 1310.05; // nm - cold resonance wavelength
+  parameter real fsr_nm = 8; // nm - free spectral range
+  parameter real tuning_efficiency_nm_per_mw = 0.075; // nm/mW - heater tuning coefficient
+  parameter real voltage_tuning_nm_per_v = 0.055; // nm/V - voltage tuning coefficient
+  parameter real heater_max_mw = 18; // mW - heater limit
+  parameter real heater_mw = 0; // mW - heater operating point
+
+  analog begin
+    // Ring equation:
+    // linewidth_nm = resonance_wavelength_nm / q_factor;
+    // depth = 1.0 - pow(10.0, -extinction_ratio_db / 10.0);
+    // resonance_eff_nm = resonance_wavelength_nm
+    //                  + heater_mw * tuning_efficiency_nm_per_mw
+    //                  + V(drive) * voltage_tuning_nm_per_v;
+    // detuning = (wavelength_nm - resonance_eff_nm) / linewidth_nm;
+    // T = pow(10.0, -insertion_loss_db / 10.0)
+    //     * (1.0 - depth / (1.0 + pow(2.0 * detuning, 2.0)));
+  end
+endmodule

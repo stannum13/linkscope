@@ -9,8 +9,9 @@ from pathlib import Path
 import numpy as np
 
 from photon_link_lab.calibration import fit_ring_from_measurements, write_calibration
-from photon_link_lab.compact_model import export_compact_model
+from photon_link_lab.compact_model import export_compact_model, export_veriloga_style
 from photon_link_lab.config import LinkConfig, ModulatorConfig
+from photon_link_lab.cpo import benchmark_scenarios
 from photon_link_lab.datasets import generate_fake_ring_measurements, read_measurements
 from photon_link_lab.devices import ring_derived_metrics, ring_transfer
 from photon_link_lab.link import simulate_link
@@ -18,14 +19,19 @@ from photon_link_lab.metrics import link_budget
 from photon_link_lab.ml import bayesian_like_heater_search
 from photon_link_lab.plots import (
     save_ber_sweep,
+    save_cpo_benchmark,
     save_drift_sweep,
     save_eye_diagram,
     save_ring_fit,
+    save_surrogate_parity,
+    save_wafer_map,
     save_wdm_sweep,
     save_yield_histogram,
 )
+from photon_link_lab.surrogate import surrogate_report_payload, train_test_surrogate
 from photon_link_lab.sweeps import monte_carlo_yield, sweep_thermal_drift, sweep_tx_power, write_csv
 from photon_link_lab.units import linear_to_db
+from photon_link_lab.variation import generate_wafer_grid, summarize_pass_fail, wafer_field_matrix
 from photon_link_lab.wdm import simulate_wdm
 
 
@@ -61,6 +67,7 @@ def simulate_cmd(args: argparse.Namespace) -> None:
     )
     save_eye_diagram(result, out / "eye_diagram.png", cfg.samples_per_symbol)
     export_compact_model(out / "compact_model.json", cfg, mod)
+    export_veriloga_style(out / "ring_behavioral.va", cfg, mod)
     print(json.dumps({"metrics": result.metrics, "budget": result.budget}, indent=2))
 
 
@@ -162,6 +169,64 @@ def wdm_cmd(args: argparse.Namespace) -> None:
     )
 
 
+def wafer_cmd(args: argparse.Namespace) -> None:
+    rows = generate_wafer_grid()
+    write_csv(args.out, rows)
+    summary = summarize_pass_fail(rows)
+    _write_json(args.summary, summary)
+    if args.plot:
+        save_wafer_map(wafer_field_matrix(rows, "yield_score"), args.plot)
+    print(
+        json.dumps(
+            {
+                "rows": len(rows),
+                "yield_percent": summary["yield_percent"],
+                "csv": args.out,
+                "summary": args.summary,
+                "plot": args.plot,
+            },
+            indent=2,
+        )
+    )
+
+
+def cpo_cmd(args: argparse.Namespace) -> None:
+    rows = benchmark_scenarios()
+    write_csv(args.out, rows)
+    _write_json(args.summary, {"scenarios": rows})
+    if args.plot:
+        save_cpo_benchmark(rows, args.plot)
+    print(
+        json.dumps(
+            {
+                "rows": len(rows),
+                "csv": args.out,
+                "summary": args.summary,
+                "plot": args.plot,
+            },
+            indent=2,
+        )
+    )
+
+
+def surrogate_cmd(args: argparse.Namespace) -> None:
+    result = train_test_surrogate(
+        n_samples=args.samples,
+        n_symbols=args.symbols,
+        seed=args.seed,
+    )
+    payload = surrogate_report_payload(result)
+    _write_json(args.out, payload)
+    if args.plot:
+        test_idx = result["test_indices"]
+        save_surrogate_parity(
+            result["targets"][test_idx],
+            result["predictions"],
+            args.plot,
+        )
+    print(json.dumps({"metrics": payload["metrics"], "out": args.out, "plot": args.plot}, indent=2))
+
+
 def benchmark_cmd(args: argparse.Namespace) -> None:
     root = Path(args.out)
     artifacts = Path(args.artifacts)
@@ -177,6 +242,7 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
     )
     save_eye_diagram(link_result, plots / "eye_diagram.png", cfg.samples_per_symbol)
     export_compact_model(artifacts / "compact_model.json", cfg, ModulatorConfig())
+    export_veriloga_style(artifacts / "ring_behavioral.va", cfg, ModulatorConfig())
 
     power_rows = sweep_tx_power(np.linspace(-4.0, 5.0, 10), cfg=cfg)
     write_csv(root / "tx_power_sweep.csv", power_rows)
@@ -196,6 +262,24 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
     wdm_rows = simulate_wdm(cfg=LinkConfig(n_symbols=args.yield_symbols))
     write_csv(root / "wdm_sweep.csv", wdm_rows)
     save_wdm_sweep(wdm_rows, plots / "wdm_channel_ber.png")
+
+    wafer_rows = generate_wafer_grid()
+    write_csv(root / "wafer_grid.csv", wafer_rows)
+    _write_json(artifacts / "wafer_summary.json", summarize_pass_fail(wafer_rows))
+    save_wafer_map(wafer_field_matrix(wafer_rows, "yield_score"), plots / "wafer_map.png")
+
+    cpo_rows = benchmark_scenarios()
+    write_csv(root / "cpo_scenarios.csv", cpo_rows)
+    _write_json(artifacts / "cpo_scenarios.json", {"scenarios": cpo_rows})
+    save_cpo_benchmark(cpo_rows, plots / "cpo_scenarios.png")
+
+    surrogate = train_test_surrogate(n_samples=24, n_symbols=args.yield_symbols)
+    _write_json(artifacts / "surrogate.json", surrogate_report_payload(surrogate))
+    save_surrogate_parity(
+        surrogate["targets"][surrogate["test_indices"]],
+        surrogate["predictions"],
+        plots / "surrogate_parity.png",
+    )
 
     calibration = fit_ring_from_measurements(measured_path)
     write_calibration(artifacts / "calibration.json", calibration)
@@ -227,9 +311,16 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
             "thermal_drift_sweep": str(root / "thermal_drift_sweep.csv"),
             "yield_monte_carlo": str(root / "yield_monte_carlo.csv"),
             "wdm_sweep": str(root / "wdm_sweep.csv"),
+            "wafer_grid": str(root / "wafer_grid.csv"),
+            "wafer_summary": str(artifacts / "wafer_summary.json"),
+            "cpo_scenarios": str(root / "cpo_scenarios.csv"),
+            "cpo_summary": str(artifacts / "cpo_scenarios.json"),
             "link_metrics": str(artifacts / "link_metrics.json"),
             "calibration": str(artifacts / "calibration.json"),
             "heater_tuning": str(artifacts / "heater_tuning.json"),
+            "compact_model": str(artifacts / "compact_model.json"),
+            "veriloga_style": str(artifacts / "ring_behavioral.va"),
+            "surrogate": str(artifacts / "surrogate.json"),
             "plots": str(plots),
         },
     }
@@ -246,6 +337,8 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     calibration_src = Path(args.calibration).as_posix()
     yield_src = Path(args.yield_plot).as_posix()
     wdm_src = Path(args.wdm).as_posix()
+    wafer_src = Path(args.wafer).as_posix()
+    cpo_src = Path(args.cpo).as_posix()
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -267,6 +360,8 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     <section><h2>Calibration</h2><img src="{calibration_src}" alt="Calibration fit"></section>
     <section><h2>Yield</h2><img src="{yield_src}" alt="Yield histogram"></section>
     <section><h2>WDM</h2><img src="{wdm_src}" alt="WDM channel metrics"></section>
+    <section><h2>Wafer</h2><img src="{wafer_src}" alt="Wafer yield map"></section>
+    <section><h2>CPO</h2><img src="{cpo_src}" alt="CPO scenario benchmark"></section>
   </div>
   <h2>Latest Metrics</h2>
   <pre>{json.dumps(metrics, indent=2)}</pre>
@@ -347,6 +442,26 @@ def build_parser() -> argparse.ArgumentParser:
     wdm.add_argument("--symbols", type=int, default=1024)
     wdm.set_defaults(func=wdm_cmd)
 
+    wafer = sub.add_parser("wafer", help="generate a deterministic wafer process map")
+    wafer.add_argument("--out", default="data/benchmarks/wafer_grid.csv")
+    wafer.add_argument("--summary", default="artifacts/demo/wafer_summary.json")
+    wafer.add_argument("--plot", default="plots/wafer_map.png")
+    wafer.set_defaults(func=wafer_cmd)
+
+    cpo = sub.add_parser("cpo", help="run assumption-driven CPO architecture scenarios")
+    cpo.add_argument("--out", default="data/benchmarks/cpo_scenarios.csv")
+    cpo.add_argument("--summary", default="artifacts/demo/cpo_scenarios.json")
+    cpo.add_argument("--plot", default="plots/cpo_scenarios.png")
+    cpo.set_defaults(func=cpo_cmd)
+
+    surrogate = sub.add_parser("surrogate", help="train a lightweight BER/Q surrogate")
+    surrogate.add_argument("--out", default="artifacts/demo/surrogate.json")
+    surrogate.add_argument("--plot", default="plots/surrogate_parity.png")
+    surrogate.add_argument("--samples", type=int, default=48)
+    surrogate.add_argument("--symbols", type=int, default=384)
+    surrogate.add_argument("--seed", type=int, default=101)
+    surrogate.set_defaults(func=surrogate_cmd)
+
     benchmark = sub.add_parser(
         "benchmark",
         help="regenerate canonical datasets, plots, and reports",
@@ -368,6 +483,8 @@ def build_parser() -> argparse.ArgumentParser:
     dash.add_argument("--calibration", default="../../plots/calibration_fit.png")
     dash.add_argument("--yield-plot", default="../../plots/yield_histogram.png")
     dash.add_argument("--wdm", default="../../plots/wdm_channel_ber.png")
+    dash.add_argument("--wafer", default="../../plots/wafer_map.png")
+    dash.add_argument("--cpo", default="../../plots/cpo_scenarios.png")
     dash.set_defaults(func=dashboard_cmd)
     return parser
 

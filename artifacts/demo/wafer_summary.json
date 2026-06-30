@@ -1,0 +1,10 @@
+{
+  "total_die": 81,
+  "passed_die": 67,
+  "failed_die": 14,
+  "yield_fraction": 0.8271604938271605,
+  "yield_percent": 82.71604938271605,
+  "mean_yield_score": 0.6893045581136403,
+  "median_yield_score": 0.6936534934429239,
+  "min_yield_score": 0.288184286625441
+}

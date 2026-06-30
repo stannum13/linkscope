@@ -47,6 +47,7 @@ photon-link sweep --out data/benchmarks/tx_power_sweep.csv
 photon-link drift --out data/benchmarks/thermal_drift_sweep.csv
 photon-link yield --out data/benchmarks/yield_monte_carlo.csv
 photon-link wdm --out data/benchmarks/wdm_sweep.csv
+photon-link cpo --out data/benchmarks/cpo_scenarios.csv
 photon-link tune --thermal-shift-nm 0.12
 photon-link benchmark
 ```
@@ -88,6 +89,14 @@ sigma_RIN = I_avg * sqrt(RIN_linear * B)
 sigma_total = sqrt(sigma_shot^2 + sigma_thermal^2 + sigma_RIN^2)
 ```
 
+Wafer yield proxy:
+
+```text
+score = 1 / (1 + resonance_penalty^2 + q_penalty^2
+               + loss_penalty^2 + responsivity_penalty^2)
+pass = score >= threshold
+```
+
 Empirical BER estimate:
 
 ```text
@@ -113,9 +122,12 @@ It regenerates:
 | Thermal drift sweep | `data/benchmarks/thermal_drift_sweep.csv` |
 | Monte Carlo yield | `data/benchmarks/yield_monte_carlo.csv` |
 | WDM channel sweep | `data/benchmarks/wdm_sweep.csv` |
+| Wafer process grid | `data/benchmarks/wafer_grid.csv` |
+| CPO scenario benchmark | `data/benchmarks/cpo_scenarios.csv` |
 | Link metrics | `artifacts/demo/link_metrics.json` |
 | Calibration result | `artifacts/demo/calibration.json` |
 | Heater tuning result | `artifacts/demo/heater_tuning.json` |
+| Surrogate report | `artifacts/demo/surrogate.json` |
 | Dashboard | `artifacts/demo/dashboard.html` |
 
 Current quick-demo metrics:
@@ -145,6 +157,12 @@ Representative plots:
 
 ![WDM channel BER](plots/wdm_channel_ber.png)
 
+![Wafer map](plots/wafer_map.png)
+
+![Surrogate parity](plots/surrogate_parity.png)
+
+![CPO scenarios](plots/cpo_scenarios.png)
+
 ## Implemented Scope
 
 Base optical interconnect:
@@ -158,13 +176,18 @@ Base optical interconnect:
 - Feed-forward equalizer.
 - Eye diagram, eye-Q metrics, empirical SER/BER, and link budget.
 - Parameter sweeps, thermal drift sweeps, and Monte Carlo device variability.
+- Deterministic wafer-grid process variation with resonance, Q, loss,
+  responsivity, yield score, and pass/fail fields for wafer-map visualization.
 - WDM channel wavelength spacing, crosstalk matrix, and first-order dispersion
   penalty reporting.
 - Fake measured ring data and least-squares ring calibration.
 - Coarse-to-fine heater tuning search for resonance locking.
 - Deterministic ridge surrogate for log10 clipped BER and eye-Q prediction from
   generated simulator samples.
-- Compact JSON export for behavioral model parameters.
+- Compact JSON export/import plus Verilog-A-style behavioral text export for
+  ring and MZI model parameters.
+- Assumption-driven CPO/pluggable architecture scenarios for energy per bit,
+  retimer count, package power, and latency.
 
 Physics ladder status:
 
@@ -175,8 +198,8 @@ Physics ladder status:
 | 3 thermal drift, heater tuning, actuator limits | Implemented baseline |
 | 4 shot, thermal, RIN, quantization, jitter | Implemented baseline |
 | 5 WDM, crosstalk, dispersion | Baseline implemented |
-| 6 process/wafer statistics | Monte Carlo baseline implemented; wafer hierarchy planned |
-| 7 compact models | JSON export implemented; Verilog-A-style export planned |
+| 6 process/wafer statistics | Monte Carlo baseline and deterministic wafer grid implemented |
+| 7 compact models | JSON export/import and Verilog-A-style text export implemented |
 | 8 real/published data calibration | Synthetic calibration implemented; real/published adapter planned |
 
 ML ladder status:
@@ -207,6 +230,26 @@ scripts/                    reproducibility helpers
 .github/workflows/ci.yml    CI
 ```
 
+## Wafer Variation API
+
+`photon_link_lab.variation.generate_wafer_grid()` returns one row per active die
+inside the wafer radius. Row fields are `die_index`, `row`, `col`, `x_mm`,
+`y_mm`, `radius_norm`, `resonance_wavelength_nm`, `resonance_shift_nm`,
+`q_factor`, `insertion_loss_db`, `responsivity_a_per_w`, `yield_score`, and
+`pass`.
+
+`summarize_pass_fail()` returns a stable summary schema: `total_die`,
+`passed_die`, `failed_die`, `yield_fraction`, `yield_percent`,
+`mean_yield_score`, `median_yield_score`, and `min_yield_score`.
+
+## CPO Scenario Benchmark
+
+`photon_link_lab.cpo` compares explicit architecture assumptions for retimed
+pluggable optics and co-packaged optical I/O. It reports lane count,
+electrical-loss proxy, retimer count, energy per bit, package power, latency,
+heater power, and link-margin proxy. These are scenario calculations for
+architecture reasoning, not vendor performance claims.
+
 ## Limitations
 
 This is a behavioral simulator, not an electromagnetic, TCAD, SPICE, or
@@ -215,3 +258,5 @@ estimates; low-BER claims should use longer runs or eye-Q proxy analysis.
 The fake measured data validates the calibration workflow, not real-silicon
 accuracy. JAX support is currently scoped as an optional backend direction for
 smooth differentiable kernels rather than a full stochastic JAX rewrite.
+The CPO scenario layer uses stated assumptions and should not be read as a
+claim of production CPO power, latency, or bandwidth.

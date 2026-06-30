@@ -63,6 +63,42 @@ active learning, differentiable JAX optimization, controller design, and anomaly
 detection only when each feature has a dataset, metric, baseline, and generated
 artifact.
 
+## Wafer Process Variation
+
+`src/photon_link_lab/variation.py` adds a deterministic wafer-grid generator for
+process and yield visualization. A `WaferGridConfig` defines the clipped wafer
+die grid, random seed, and proxy pass/fail tolerances. `VariationConfig`
+controls die-local resonance, Q, loss, and responsivity spreads, plus
+die-to-die resonance offset and a linear wafer resonance gradient.
+
+Each active die row contains physical coordinates and process fields:
+resonance wavelength, resonance shift, Q factor, insertion loss, responsivity,
+yield score, and pass/fail flag. The pass/fail proxy is a normalized distance
+from nominal device/link fields:
+
+```text
+score = 1 / (1 + resonance_penalty^2 + q_penalty^2
+               + loss_penalty^2 + responsivity_penalty^2)
+pass = score >= threshold
+```
+
+The summary schema is intentionally stable for future CLI or plotting wiring:
+`total_die`, `passed_die`, `failed_die`, `yield_fraction`, `yield_percent`,
+`mean_yield_score`, `median_yield_score`, and `min_yield_score`. This proxy is
+for deterministic screening and wafer-map visualization; it is not a substitute
+for a full end-to-end BER Monte Carlo over every die.
+
+## CPO Scenario Benchmark
+
+`src/photon_link_lab/cpo.py` adds an assumption-driven architecture benchmark
+for retimed pluggable optics versus co-packaged optical I/O. It translates
+aggregate bandwidth and lane-rate assumptions into lane count, electrical-loss
+proxy, retimer count, energy per bit, package power, latency, heater power, and
+link-margin proxy. This connects the component simulator to package-level
+optical-I/O questions: power per bit, trace length, retimer/DSP burden, thermal
+load, and serviceability. It does not reproduce or claim vendor system
+performance.
+
 ## Validation Strategy
 
 The test suite checks:
@@ -74,6 +110,9 @@ The test suite checks:
 - channel loss and link-budget trends;
 - finite end-to-end ring/MZI simulation results;
 - WDM wavelength spacing and crosstalk matrix behavior;
+- CPO scenario determinism and copper-length retimer/latency trends;
+- wafer-grid reproducibility, zero-variation collapse, and worsening yield proxy
+  under larger process spreads;
 - synthetic calibration recovery;
 - deterministic surrogate prediction finiteness, JSON report shape, and
   held-out error sanity;

@@ -207,14 +207,15 @@ Level 5 WDM:
 
 Level 6 process variation:
 
-- Add wafer-gradient and die-to-die models.
-- Generate wafer map.
+- Baseline complete: wafer-gradient/die variation helper, wafer grid CSV,
+  wafer summary JSON, wafer map plot, and tests.
+- Next refinement: run selected die through full end-to-end link simulation and
+  include heater headroom/FEC margin in pass/fail.
 
 Level 7 compact models:
 
-- Version compact JSON schema.
-- Add loader and round-trip tests.
-- Optionally export Verilog-A-style text.
+- Baseline complete: versioned compact JSON export/import, round-trip tests, and
+  Verilog-A-style text export explicitly labeled non-signoff.
 
 Level 8 real/published data:
 
@@ -227,8 +228,10 @@ Goal: add AI depth only when backed by datasets, baselines, and metrics.
 
 Level 3 surrogate:
 
-- Train on generated sweeps.
-- Report train/test split, MAE/RMSE, parity plot, worst-case error.
+- Baseline complete: deterministic ridge surrogate over generated link samples,
+  train/test split, MAE/RMSE report, parity plot, and tests.
+- Next refinement: add nonlinear or neural surrogate only after defining a
+  larger benchmark dataset and error budget.
 
 Level 4 UQ:
 
@@ -254,6 +257,22 @@ Level 8 anomaly detection:
 
 - Inject manufacturing/test anomalies.
 - Report precision and recall.
+
+## Phase 9: CPO/Optical-I/O Architecture Benchmark
+
+Baseline complete:
+
+- `ScenarioConfig` for retimed pluggable and co-packaged optical-I/O scenarios.
+- Deterministic CSV/JSON/plot artifacts for energy per bit, retimer count,
+  package power, latency, lane count, and link-margin proxy.
+- Tests proving longer copper traces increase retimer need, energy, and latency.
+
+Next refinement:
+
+- Add explicit external-laser serviceability assumptions, UCIe/chiplet boundary
+  metadata, cooling-overhead sensitivity, and CPO-vs-pluggable scenario sweeps.
+- Keep claims assumption-driven; do not present vendor power or bandwidth
+  numbers as simulator output.
 
 ## Scope Rules
 

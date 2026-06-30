@@ -8,9 +8,16 @@
     "thermal_drift_sweep": "data/benchmarks/thermal_drift_sweep.csv",
     "yield_monte_carlo": "data/benchmarks/yield_monte_carlo.csv",
     "wdm_sweep": "data/benchmarks/wdm_sweep.csv",
+    "wafer_grid": "data/benchmarks/wafer_grid.csv",
+    "wafer_summary": "artifacts/demo/wafer_summary.json",
+    "cpo_scenarios": "data/benchmarks/cpo_scenarios.csv",
+    "cpo_summary": "artifacts/demo/cpo_scenarios.json",
     "link_metrics": "artifacts/demo/link_metrics.json",
     "calibration": "artifacts/demo/calibration.json",
     "heater_tuning": "artifacts/demo/heater_tuning.json",
+    "compact_model": "artifacts/demo/compact_model.json",
+    "veriloga_style": "artifacts/demo/ring_behavioral.va",
+    "surrogate": "artifacts/demo/surrogate.json",
     "plots": "plots"
   }
 }
