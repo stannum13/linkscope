@@ -9,6 +9,9 @@ photodetection, receiver noise, equalization, and BER/eye metrics. The package
 also includes synthetic measured data generation, least-squares calibration, and
 a heater tuning search for drift compensation. A first-order WDM helper models
 channel wavelength spacing, mux loss, crosstalk, and dispersion UI penalty.
+The benchmark-v2 scoreboard joins link BER confidence/FEC margin, WDM
+worst-channel behavior, wafer proxy yield, surrogate error, and CPO
+architecture metrics into one normalized CSV/JSON artifact.
 
 The goal is architecture exploration and validation workflow prototyping. It is
 not a replacement for electromagnetic simulation, SPICE, Verilog-A signoff, or
@@ -26,7 +29,7 @@ PAM4/NRZ symbols
   -> photodiode/TIA bandwidth
   -> shot, thermal, RIN, quantization, jitter-like impairments
   -> feed-forward equalizer
-  -> eye metrics, SER/BER, and link budget
+  -> eye metrics, SER/BER, confidence-bounded BER, and link budget
 ```
 
 The orchestrating entry point is `simulate_link()` in `src/photon_link_lab/link.py`.
@@ -99,6 +102,24 @@ optical-I/O questions: power per bit, trace length, retimer/DSP burden, thermal
 load, and serviceability. It does not reproduce or claim vendor system
 performance.
 
+## Benchmark V2 Scoreboard
+
+`src/photon_link_lab/scoreboard.py` assembles a cross-domain scoreboard from
+already-generated benchmark outputs. Rows use the stable schema `section`,
+`metric`, `value`, `unit`, and `note`, so the CSV can be diffed in code review
+and the JSON can be consumed by dashboards. The scoreboard currently includes:
+
+- core link line rate, empirical BER, 95 percent BER upper bound, FEC-margin
+  proxy, eye Q, RX power, and observed symbol errors;
+- WDM worst-channel BER/Q plus maximum crosstalk penalty and dispersion skew;
+- wafer proxy yield and yield-score statistics;
+- surrogate train/test sample counts and held-out MAE/RMSE;
+- pluggable-versus-CPO energy, power, latency, retimer, and lane metrics plus
+  delta rows.
+
+The FEC field is a margin proxy against a configurable pre-FEC BER threshold.
+It does not model an actual FEC code or post-FEC BER.
+
 ## Validation Strategy
 
 The test suite checks:
@@ -108,9 +129,11 @@ The test suite checks:
 - ring transfer bounds and resonance behavior;
 - MZI transfer bounds;
 - channel loss and link-budget trends;
+- empirical BER, Wilson upper confidence bound, and FEC-margin trend;
 - finite end-to-end ring/MZI simulation results;
 - WDM wavelength spacing and crosstalk matrix behavior;
 - CPO scenario determinism and copper-length retimer/latency trends;
+- benchmark-v2 scoreboard schema and CLI artifact generation;
 - wafer-grid reproducibility, zero-variation collapse, and worsening yield proxy
   under larger process spreads;
 - synthetic calibration recovery;
@@ -127,7 +150,7 @@ CLI rather than by notebooks.
 - Shot noise uses average current in the baseline implementation.
 - Jitter is approximated as slope times timing noise rather than explicit
   waveform resampling.
-- Empirical BER from short random sequences should be interpreted as a smoke
-  metric, not a low-BER signoff estimate.
+- Empirical BER and Wilson confidence bounds from short random sequences should
+  be interpreted as smoke metrics, not low-BER signoff estimates.
 - JAX is not yet used for the full stochastic simulator; planned JAX work should
   focus on smooth differentiable kernels and optimization proxies.

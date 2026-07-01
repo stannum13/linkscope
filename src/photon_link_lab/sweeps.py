@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+from collections.abc import Mapping
 from pathlib import Path
 
 import numpy as np
@@ -78,7 +79,7 @@ def monte_carlo_yield(
     return rows
 
 
-def write_csv(path: str | Path, rows: list[dict[str, float]]) -> None:
+def write_csv(path: str | Path, rows: list[Mapping[str, float | int | str]]) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     if not rows:

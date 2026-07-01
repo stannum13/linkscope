@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -216,3 +217,76 @@ def save_cpo_benchmark(rows: list[dict[str, float | str]], path: str | Path) -> 
     fig.savefig(path)
     plt.close(fig)
     return path
+
+
+def save_scoreboard_summary(
+    rows: Sequence[Mapping[str, float | str]],
+    path: str | Path,
+) -> Path:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, axes = plt.subplots(1, 2, figsize=(9.4, 4.2), dpi=150)
+
+    empirical = _scoreboard_value(rows, "link_core", "empirical_ber")
+    upper = _scoreboard_value(rows, "link_core", "ber_upper_95")
+    fec = _scoreboard_value(rows, "link_core", "fec_threshold_ber")
+    margin = _scoreboard_value(rows, "link_core", "fec_margin_db")
+    ber_values = np.asarray([max(empirical, 1e-12), max(upper, 1e-12), max(fec, 1e-12)])
+    axes[0].bar(["BER", "95% upper", "FEC"], ber_values, color=["#475467", "#b42318", "#067647"])
+    axes[0].set_yscale("log")
+    axes[0].set_ylabel("BER")
+    axes[0].set_title(f"BER confidence: {margin:.1f} dB FEC margin")
+    axes[0].grid(True, axis="y", which="both", alpha=0.25)
+
+    scenario_sections = [
+        section
+        for section in _scoreboard_sections(rows)
+        if section.startswith("architecture.") and not section.startswith("architecture_delta.")
+    ]
+    names = [section.split(".", 1)[1] for section in scenario_sections]
+    if names:
+        energy = np.asarray(
+            [_scoreboard_value(rows, section, "energy_pj_per_bit") for section in scenario_sections]
+        )
+        latency = np.asarray(
+            [_scoreboard_value(rows, section, "latency_ns") for section in scenario_sections]
+        )
+        x = np.arange(len(names))
+        width = 0.36
+        axes[1].bar(x - width / 2, energy, width=width, color="#2458a6", label="pJ/bit")
+        axes[1].set_ylabel("Energy (pJ/bit)")
+        axes[1].set_xticks(x)
+        axes[1].set_xticklabels([name.replace("_", "\n") for name in names])
+        axes[1].grid(True, axis="y", alpha=0.25)
+        ax2 = axes[1].twinx()
+        ax2.bar(x + width / 2, latency, width=width, color="#b42318", label="latency")
+        ax2.set_ylabel("Latency (ns)")
+        axes[1].set_title("Architecture scenarios")
+    else:
+        axes[1].axis("off")
+        axes[1].text(0.5, 0.5, "No architecture rows", ha="center", va="center")
+
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    return path
+
+
+def _scoreboard_value(
+    rows: Sequence[Mapping[str, float | str]],
+    section: str,
+    metric: str,
+) -> float:
+    for row in rows:
+        if row["section"] == section and row["metric"] == metric:
+            return float(row["value"])
+    raise KeyError(f"scoreboard metric not found: {section}.{metric}")
+
+
+def _scoreboard_sections(rows: Sequence[Mapping[str, float | str]]) -> list[str]:
+    sections: list[str] = []
+    for row in rows:
+        section = str(row["section"])
+        if section not in sections:
+            sections.append(section)
+    return sections

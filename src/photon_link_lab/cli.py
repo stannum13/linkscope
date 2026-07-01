@@ -23,10 +23,16 @@ from photon_link_lab.plots import (
     save_drift_sweep,
     save_eye_diagram,
     save_ring_fit,
+    save_scoreboard_summary,
     save_surrogate_parity,
     save_wafer_map,
     save_wdm_sweep,
     save_yield_histogram,
+)
+from photon_link_lab.scoreboard import (
+    build_scoreboard,
+    run_scoreboard_benchmark,
+    scoreboard_payload,
 )
 from photon_link_lab.surrogate import surrogate_report_payload, train_test_surrogate
 from photon_link_lab.sweeps import monte_carlo_yield, sweep_thermal_drift, sweep_tx_power, write_csv
@@ -227,6 +233,30 @@ def surrogate_cmd(args: argparse.Namespace) -> None:
     print(json.dumps({"metrics": payload["metrics"], "out": args.out, "plot": args.plot}, indent=2))
 
 
+def benchmark_v2_cmd(args: argparse.Namespace) -> None:
+    rows = run_scoreboard_benchmark(
+        symbols=args.symbols,
+        yield_symbols=args.yield_symbols,
+        surrogate_samples=args.surrogate_samples,
+        fec_threshold_ber=args.fec_threshold_ber,
+    )
+    write_csv(args.out, rows)
+    _write_json(args.summary, scoreboard_payload(rows))
+    if args.plot:
+        save_scoreboard_summary(rows, args.plot)
+    print(
+        json.dumps(
+            {
+                "rows": len(rows),
+                "csv": args.out,
+                "summary": args.summary,
+                "plot": args.plot,
+            },
+            indent=2,
+        )
+    )
+
+
 def benchmark_cmd(args: argparse.Namespace) -> None:
     root = Path(args.out)
     artifacts = Path(args.artifacts)
@@ -265,7 +295,8 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
 
     wafer_rows = generate_wafer_grid()
     write_csv(root / "wafer_grid.csv", wafer_rows)
-    _write_json(artifacts / "wafer_summary.json", summarize_pass_fail(wafer_rows))
+    wafer_summary = summarize_pass_fail(wafer_rows)
+    _write_json(artifacts / "wafer_summary.json", wafer_summary)
     save_wafer_map(wafer_field_matrix(wafer_rows, "yield_score"), plots / "wafer_map.png")
 
     cpo_rows = benchmark_scenarios()
@@ -280,6 +311,17 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
         surrogate["predictions"],
         plots / "surrogate_parity.png",
     )
+
+    scoreboard_rows = build_scoreboard(
+        link_result=link_result,
+        wdm_rows=wdm_rows,
+        wafer_summary=wafer_summary,
+        cpo_rows=cpo_rows,
+        surrogate_result=surrogate,
+    )
+    write_csv(root / "benchmark_v2_scoreboard.csv", scoreboard_rows)
+    _write_json(artifacts / "benchmark_v2_scoreboard.json", scoreboard_payload(scoreboard_rows))
+    save_scoreboard_summary(scoreboard_rows, plots / "benchmark_v2_scoreboard.png")
 
     calibration = fit_ring_from_measurements(measured_path)
     write_calibration(artifacts / "calibration.json", calibration)
@@ -315,12 +357,15 @@ def benchmark_cmd(args: argparse.Namespace) -> None:
             "wafer_summary": str(artifacts / "wafer_summary.json"),
             "cpo_scenarios": str(root / "cpo_scenarios.csv"),
             "cpo_summary": str(artifacts / "cpo_scenarios.json"),
+            "benchmark_v2_scoreboard": str(root / "benchmark_v2_scoreboard.csv"),
+            "benchmark_v2_summary": str(artifacts / "benchmark_v2_scoreboard.json"),
             "link_metrics": str(artifacts / "link_metrics.json"),
             "calibration": str(artifacts / "calibration.json"),
             "heater_tuning": str(artifacts / "heater_tuning.json"),
             "compact_model": str(artifacts / "compact_model.json"),
             "veriloga_style": str(artifacts / "ring_behavioral.va"),
             "surrogate": str(artifacts / "surrogate.json"),
+            "scoreboard_plot": str(plots / "benchmark_v2_scoreboard.png"),
             "plots": str(plots),
         },
     }
@@ -339,6 +384,7 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     wdm_src = Path(args.wdm).as_posix()
     wafer_src = Path(args.wafer).as_posix()
     cpo_src = Path(args.cpo).as_posix()
+    scoreboard_src = Path(args.scoreboard).as_posix()
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -362,6 +408,8 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     <section><h2>WDM</h2><img src="{wdm_src}" alt="WDM channel metrics"></section>
     <section><h2>Wafer</h2><img src="{wafer_src}" alt="Wafer yield map"></section>
     <section><h2>CPO</h2><img src="{cpo_src}" alt="CPO scenario benchmark"></section>
+    <section><h2>Benchmark V2</h2>
+      <img src="{scoreboard_src}" alt="Benchmark V2 scoreboard"></section>
   </div>
   <h2>Latest Metrics</h2>
   <pre>{json.dumps(metrics, indent=2)}</pre>
@@ -462,6 +510,19 @@ def build_parser() -> argparse.ArgumentParser:
     surrogate.add_argument("--seed", type=int, default=101)
     surrogate.set_defaults(func=surrogate_cmd)
 
+    benchmark_v2 = sub.add_parser(
+        "benchmark-v2",
+        help="write cross-domain scoreboard CSV/JSON/plot",
+    )
+    benchmark_v2.add_argument("--out", default="data/benchmarks/benchmark_v2_scoreboard.csv")
+    benchmark_v2.add_argument("--summary", default="artifacts/demo/benchmark_v2_scoreboard.json")
+    benchmark_v2.add_argument("--plot", default="plots/benchmark_v2_scoreboard.png")
+    benchmark_v2.add_argument("--symbols", type=int, default=2048)
+    benchmark_v2.add_argument("--yield-symbols", type=int, default=768)
+    benchmark_v2.add_argument("--surrogate-samples", type=int, default=24)
+    benchmark_v2.add_argument("--fec-threshold-ber", type=float, default=2e-4)
+    benchmark_v2.set_defaults(func=benchmark_v2_cmd)
+
     benchmark = sub.add_parser(
         "benchmark",
         help="regenerate canonical datasets, plots, and reports",
@@ -485,6 +546,7 @@ def build_parser() -> argparse.ArgumentParser:
     dash.add_argument("--wdm", default="../../plots/wdm_channel_ber.png")
     dash.add_argument("--wafer", default="../../plots/wafer_map.png")
     dash.add_argument("--cpo", default="../../plots/cpo_scenarios.png")
+    dash.add_argument("--scoreboard", default="../../plots/benchmark_v2_scoreboard.png")
     dash.set_defaults(func=dashboard_cmd)
     return parser
 

@@ -144,3 +144,21 @@ eye_opening_i = mu_{i+1} - mu_i
 Q_i = eye_opening_i / (sigma_{i+1} + sigma_i)
 Q_eye = min_i Q_i
 ```
+
+For short deterministic benchmark runs, the package also reports a Wilson upper
+confidence bound on the symbol-error rate and maps it to the same BER
+convention:
+
+```text
+z = NormalQuantile(0.5 + confidence / 2)
+denom = 1 + z^2 / N_symbols
+center = (p_hat + z^2 / (2 N_symbols)) / denom
+radius = z * sqrt(p_hat(1 - p_hat) / N_symbols
+                  + z^2 / (4 N_symbols^2)) / denom
+SER_upper = center + radius
+BER_upper ~= SER_upper / log2(PAM_order)
+FEC_margin_dB = 10 log10(BER_FEC_threshold / BER_upper)
+```
+
+This is a confidence-bounded smoke metric. It is not an extrapolated bathtub
+curve, Gray-code-aware bit-error counter, or FEC decoder model.

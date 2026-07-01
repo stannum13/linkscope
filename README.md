@@ -34,6 +34,7 @@ pip install -e ".[dev]"
 pytest
 python -m photon_link_lab.cli simulate --out artifacts/demo
 python -m photon_link_lab.cli benchmark
+python -m photon_link_lab.cli benchmark-v2
 python -m photon_link_lab.cli dashboard --out artifacts/demo/dashboard.html
 ```
 
@@ -48,6 +49,7 @@ photon-link drift --out data/benchmarks/thermal_drift_sweep.csv
 photon-link yield --out data/benchmarks/yield_monte_carlo.csv
 photon-link wdm --out data/benchmarks/wdm_sweep.csv
 photon-link cpo --out data/benchmarks/cpo_scenarios.csv
+photon-link benchmark-v2 --out data/benchmarks/benchmark_v2_scoreboard.csv
 photon-link tune --thermal-shift-nm 0.12
 photon-link benchmark
 ```
@@ -105,6 +107,15 @@ BER ~= SER / log2(PAM_order)
 Q_eye = min_i (mu_{i+1} - mu_i) / (sigma_{i+1} + sigma_i)
 ```
 
+BER confidence and FEC-margin proxy:
+
+```text
+p_hat = symbol_errors / symbols
+SER_upper,95 = WilsonUpper(p_hat, symbols, 95%)
+BER_upper,95 ~= SER_upper,95 / log2(PAM_order)
+FEC_margin_dB = 10 log10(BER_FEC_threshold / BER_upper,95)
+```
+
 ## Current Results
 
 The canonical command is:
@@ -124,10 +135,12 @@ It regenerates:
 | WDM channel sweep | `data/benchmarks/wdm_sweep.csv` |
 | Wafer process grid | `data/benchmarks/wafer_grid.csv` |
 | CPO scenario benchmark | `data/benchmarks/cpo_scenarios.csv` |
+| Benchmark v2 scoreboard | `data/benchmarks/benchmark_v2_scoreboard.csv` |
 | Link metrics | `artifacts/demo/link_metrics.json` |
 | Calibration result | `artifacts/demo/calibration.json` |
 | Heater tuning result | `artifacts/demo/heater_tuning.json` |
 | Surrogate report | `artifacts/demo/surrogate.json` |
+| Benchmark v2 summary | `artifacts/demo/benchmark_v2_scoreboard.json` |
 | Dashboard | `artifacts/demo/dashboard.html` |
 
 Current quick-demo metrics:
@@ -137,9 +150,13 @@ Current quick-demo metrics:
 | PAM order | 4 |
 | Symbol count | 512 |
 | Empirical BER | 0.122 |
+| 95% BER upper bound | 0.142 |
+| FEC-margin proxy | -28.5 dB |
 | Eye Q | 1.000 |
 | RX optical power | -5.83 dBm |
 | Photocurrent | 214 uA |
+| Wafer proxy yield | 82.7% |
+| CPO energy delta | 4.95 pJ/bit lower for CPO scenario |
 | Calibration RMSE | 0.083 dB |
 | Fitted Q | 8461 |
 
@@ -163,6 +180,8 @@ Representative plots:
 
 ![CPO scenarios](plots/cpo_scenarios.png)
 
+![Benchmark v2 scoreboard](plots/benchmark_v2_scoreboard.png)
+
 ## Implemented Scope
 
 Base optical interconnect:
@@ -174,7 +193,8 @@ Base optical interconnect:
 - Photodiode/TIA bandwidth and detector noise.
 - Shot noise, thermal noise, RIN, quantization, and jitter-like impairment.
 - Feed-forward equalizer.
-- Eye diagram, eye-Q metrics, empirical SER/BER, and link budget.
+- Eye diagram, eye-Q metrics, empirical SER/BER, confidence-bounded BER,
+  FEC-margin proxy, and link budget.
 - Parameter sweeps, thermal drift sweeps, and Monte Carlo device variability.
 - Deterministic wafer-grid process variation with resonance, Q, loss,
   responsivity, yield score, and pass/fail fields for wafer-map visualization.
@@ -188,6 +208,8 @@ Base optical interconnect:
   ring and MZI model parameters.
 - Assumption-driven CPO/pluggable architecture scenarios for energy per bit,
   retimer count, package power, and latency.
+- Benchmark v2 scoreboard joining link BER/FEC margin, WDM worst-channel
+  behavior, wafer proxy yield, surrogate error, and CPO architecture metrics.
 
 Physics ladder status:
 
@@ -253,8 +275,9 @@ architecture reasoning, not vendor performance claims.
 ## Limitations
 
 This is a behavioral simulator, not an electromagnetic, TCAD, SPICE, or
-Verilog-A signoff tool. BER values from short random sequences are empirical
-estimates; low-BER claims should use longer runs or eye-Q proxy analysis.
+Verilog-A signoff tool. BER values and Wilson upper bounds from short random
+sequences are smoke metrics; low-BER claims should use longer runs,
+Gray-code-aware bit counting, bathtub extrapolation, or measured data.
 The fake measured data validates the calibration workflow, not real-silicon
 accuracy. JAX support is currently scoped as an optional backend direction for
 smooth differentiable kernels rather than a full stochastic JAX rewrite.

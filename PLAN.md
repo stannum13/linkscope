@@ -12,6 +12,7 @@ pip install -e ".[dev]"
 pytest
 ruff check .
 photon-link benchmark --out data/benchmarks
+photon-link benchmark-v2 --out data/benchmarks/benchmark_v2_scoreboard.csv
 photon-link simulate --out artifacts/demo
 photon-link dashboard --out artifacts/demo/dashboard.html
 ```
@@ -116,12 +117,14 @@ Tasks:
    - `artifacts/demo/calibration.json`;
    - `artifacts/demo/heater_tuning.json`;
    - `artifacts/demo/compact_model.json`;
+   - `artifacts/demo/benchmark_v2_scoreboard.json`;
    - `artifacts/demo/dashboard.html`;
    - `plots/eye_diagram.png`;
    - `plots/ber_vs_power.png`;
    - `plots/calibration_fit.png`;
    - `plots/thermal_drift.png`;
-   - `plots/yield_histogram.png`.
+   - `plots/yield_histogram.png`;
+   - `plots/benchmark_v2_scoreboard.png`.
 
 Acceptance:
 
@@ -273,6 +276,29 @@ Next refinement:
   metadata, cooling-overhead sensitivity, and CPO-vs-pluggable scenario sweeps.
 - Keep claims assumption-driven; do not present vendor power or bandwidth
   numbers as simulator output.
+
+## Phase 10: Benchmark V2 Scoreboard And BER Confidence
+
+Baseline complete:
+
+- `metrics.ber_confidence_metrics()` reports empirical SER/BER, observed
+  symbol errors, BER observation floor, Wilson 95 percent BER upper bound, and
+  configurable FEC-margin proxy.
+- End-to-end link metrics include the confidence/FEC fields without removing
+  the original empirical `ber` and `ser` keys.
+- `scoreboard.py` joins core link, WDM, wafer proxy, surrogate, and CPO
+  architecture metrics into a normalized `section,metric,value,unit,note`
+  schema.
+- `photon-link benchmark-v2` writes CSV, JSON, and a summary plot.
+- `photon-link benchmark` includes the v2 scoreboard artifacts in the canonical
+  manifest.
+
+Next refinement:
+
+- Add Gray-code-aware bit-error counting and configurable PAM symbol mapping.
+- Add bootstrap/ensemble uncertainty intervals for yield and surrogate metrics.
+- Connect FEC thresholds to named standards profiles while keeping post-FEC
+  claims out of scope until an actual decoder model exists.
 
 ## Scope Rules
 

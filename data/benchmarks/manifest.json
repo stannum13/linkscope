@@ -12,12 +12,15 @@
     "wafer_summary": "artifacts/demo/wafer_summary.json",
     "cpo_scenarios": "data/benchmarks/cpo_scenarios.csv",
     "cpo_summary": "artifacts/demo/cpo_scenarios.json",
+    "benchmark_v2_scoreboard": "data/benchmarks/benchmark_v2_scoreboard.csv",
+    "benchmark_v2_summary": "artifacts/demo/benchmark_v2_scoreboard.json",
     "link_metrics": "artifacts/demo/link_metrics.json",
     "calibration": "artifacts/demo/calibration.json",
     "heater_tuning": "artifacts/demo/heater_tuning.json",
     "compact_model": "artifacts/demo/compact_model.json",
     "veriloga_style": "artifacts/demo/ring_behavioral.va",
     "surrogate": "artifacts/demo/surrogate.json",
+    "scoreboard_plot": "plots/benchmark_v2_scoreboard.png",
     "plots": "plots"
   }
 }

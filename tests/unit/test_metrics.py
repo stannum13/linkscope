@@ -3,13 +3,35 @@ from __future__ import annotations
 import pytest
 
 from photon_link_lab.config import LinkConfig, ModulatorConfig
-from photon_link_lab.metrics import estimate_ber, link_budget
+from photon_link_lab.metrics import ber_confidence_metrics, estimate_ber, link_budget
 
 
 def test_estimate_ber_from_symbol_errors() -> None:
     ber, ser = estimate_ber([0, 1, 2, 3], [0, 1, 1, 3], order=4)
     assert ser == pytest.approx(0.25)
     assert ber == pytest.approx(0.125)
+
+
+def test_ber_confidence_reports_zero_error_upper_bound() -> None:
+    metrics = ber_confidence_metrics([0, 1, 2, 3] * 32, [0, 1, 2, 3] * 32, order=4)
+    assert metrics["ber"] == 0.0
+    assert metrics["symbol_errors"] == 0.0
+    assert 0.0 < metrics["ber_upper_95"] < 0.02
+    assert metrics["ber_observation_floor"] == pytest.approx(1.0 / (128 * 2))
+
+
+def test_ber_confidence_upper_bound_increases_with_errors() -> None:
+    clean = ber_confidence_metrics([0, 1, 2, 3] * 32, [0, 1, 2, 3] * 32, order=4)
+    errored = ber_confidence_metrics([0, 1, 2, 3] * 32, [1, 1, 2, 3] * 32, order=4)
+    assert errored["ber"] > clean["ber"]
+    assert errored["ber_upper_95"] > clean["ber_upper_95"]
+    assert errored["fec_margin_db"] < clean["fec_margin_db"]
+
+
+def test_ber_confidence_custom_confidence_suffix_for_empty_input() -> None:
+    metrics = ber_confidence_metrics([], [], order=4, confidence=0.9)
+    assert "ber_upper_90" in metrics
+    assert "fec_pass_upper_90" in metrics
 
 
 def test_link_budget_has_expected_fields_and_power_trend() -> None:

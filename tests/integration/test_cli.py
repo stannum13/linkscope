@@ -105,6 +105,25 @@ def test_cli_smoke_paths(tmp_path) -> None:
     assert (tmp_path / "cpo.csv").exists()
     assert (tmp_path / "cpo.json").exists()
 
+    run_cli(
+        "benchmark-v2",
+        "--symbols",
+        "64",
+        "--yield-symbols",
+        "64",
+        "--surrogate-samples",
+        "8",
+        "--out",
+        str(tmp_path / "scoreboard.csv"),
+        "--summary",
+        str(tmp_path / "scoreboard.json"),
+        "--plot",
+        str(tmp_path / "scoreboard.png"),
+    )
+    assert (tmp_path / "scoreboard.csv").exists()
+    assert (tmp_path / "scoreboard.json").exists()
+    assert (tmp_path / "scoreboard.png").exists()
+
 
 def test_cli_benchmark_smoke(tmp_path) -> None:
     run_cli(
@@ -129,5 +148,8 @@ def test_cli_benchmark_smoke(tmp_path) -> None:
     assert (tmp_path / "bench" / "wdm_sweep.csv").exists()
     assert (tmp_path / "bench" / "wafer_grid.csv").exists()
     assert (tmp_path / "bench" / "cpo_scenarios.csv").exists()
+    assert (tmp_path / "bench" / "benchmark_v2_scoreboard.csv").exists()
     assert (tmp_path / "artifacts" / "link_metrics.json").exists()
+    assert (tmp_path / "artifacts" / "benchmark_v2_scoreboard.json").exists()
     assert (tmp_path / "plots" / "eye_diagram.png").exists()
+    assert (tmp_path / "plots" / "benchmark_v2_scoreboard.png").exists()

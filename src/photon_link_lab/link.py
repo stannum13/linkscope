@@ -10,7 +10,7 @@ from photon_link_lab.config import LinkConfig, ModulatorConfig, VariationConfig
 from photon_link_lab.devices import apply_variation, channel_loss, driver, modulate, photodiode_tia
 from photon_link_lab.equalizer import apply_ffe, decide_pam, fit_ffe
 from photon_link_lab.filters import apply_jitter_like_noise, quantize
-from photon_link_lab.metrics import estimate_ber, eye_metrics, link_budget
+from photon_link_lab.metrics import ber_confidence_metrics, estimate_ber, eye_metrics, link_budget
 from photon_link_lab.symbols import generate_symbols, sample_at_symbols, upsample
 
 
@@ -55,6 +55,7 @@ def simulate_link(
     equalized = apply_ffe(sampled, coeffs)
     rx_indices, _ = decide_pam(equalized, cfg.pam_order)
     ber, ser = estimate_ber(tx_indices, rx_indices, cfg.pam_order)
+    ber_confidence = ber_confidence_metrics(tx_indices, rx_indices, cfg.pam_order)
     eye = eye_metrics(equalized, tx_indices[: len(equalized)], cfg.pam_order)
     metrics = {
         "ber": ber,
@@ -63,6 +64,7 @@ def simulate_link(
         "line_rate_gbps": cfg.symbol_rate_gbaud * np.log2(cfg.pam_order),
         "rx_voltage_pp_mV": float((np.max(rx_voltage) - np.min(rx_voltage)) * 1e3),
         "equalizer_taps": float(cfg.equalizer_taps),
+        **ber_confidence,
         **eye,
         **noise_metrics,
     }

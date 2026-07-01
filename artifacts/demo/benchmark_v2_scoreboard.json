@@ -1,0 +1,278 @@
+{
+  "schema": "photon-link-lab.benchmark-v2.scoreboard.v1",
+  "rows": [
+    {
+      "section": "link_core",
+      "metric": "line_rate_gbps",
+      "value": 112.0,
+      "unit": "Gb/s",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "empirical_ber",
+      "value": 0.1220703125,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "ber_upper_95",
+      "value": 0.14158280668015458,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "fec_threshold_ber",
+      "value": 0.0002,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "fec_margin_db",
+      "value": -28.499805216919082,
+      "unit": "dB",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "eye_q",
+      "value": 0.9996480418593198,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "rx_optical_power_dbm",
+      "value": -5.831276076630618,
+      "unit": "dBm",
+      "note": ""
+    },
+    {
+      "section": "link_core",
+      "metric": "observed_symbol_errors",
+      "value": 125.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "wdm_worst_channel",
+      "metric": "channel",
+      "value": 2.0,
+      "unit": "index",
+      "note": ""
+    },
+    {
+      "section": "wdm_worst_channel",
+      "metric": "ber",
+      "value": 0.14391595780371869,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "wdm_worst_channel",
+      "metric": "eye_q",
+      "value": 0.8484658367128317,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "wdm_worst_channel",
+      "metric": "max_crosstalk_penalty_db",
+      "value": 0.3487000066244583,
+      "unit": "dB",
+      "note": ""
+    },
+    {
+      "section": "wdm_worst_channel",
+      "metric": "max_dispersion_band_skew_ui",
+      "value": 0.0,
+      "unit": "UI",
+      "note": ""
+    },
+    {
+      "section": "wafer_proxy",
+      "metric": "yield_percent",
+      "value": 82.71604938271605,
+      "unit": "%",
+      "note": ""
+    },
+    {
+      "section": "wafer_proxy",
+      "metric": "mean_yield_score",
+      "value": 0.6893045581136403,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "wafer_proxy",
+      "metric": "min_yield_score",
+      "value": 0.288184286625441,
+      "unit": "ratio",
+      "note": ""
+    },
+    {
+      "section": "wafer_proxy",
+      "metric": "total_die",
+      "value": 81.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "surrogate",
+      "metric": "n_samples",
+      "value": 24.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "surrogate",
+      "metric": "n_test",
+      "value": 6.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "surrogate",
+      "metric": "mae_log10_ber",
+      "value": 0.3429767056015855,
+      "unit": "log10(BER)",
+      "note": ""
+    },
+    {
+      "section": "surrogate",
+      "metric": "rmse_log10_ber",
+      "value": 0.37870284872145143,
+      "unit": "log10(BER)",
+      "note": ""
+    },
+    {
+      "section": "surrogate",
+      "metric": "mae_q_factor_eye",
+      "value": 1.057133361012797,
+      "unit": "Q",
+      "note": ""
+    },
+    {
+      "section": "surrogate",
+      "metric": "rmse_q_factor_eye",
+      "value": 1.2013142071421563,
+      "unit": "Q",
+      "note": ""
+    },
+    {
+      "section": "architecture.pluggable_retimed",
+      "metric": "energy_pj_per_bit",
+      "value": 13.118625,
+      "unit": "pJ/bit",
+      "note": ""
+    },
+    {
+      "section": "architecture.pluggable_retimed",
+      "metric": "package_power_w",
+      "value": 1311.8625,
+      "unit": "W",
+      "note": ""
+    },
+    {
+      "section": "architecture.pluggable_retimed",
+      "metric": "latency_ns",
+      "value": 4.59,
+      "unit": "ns",
+      "note": ""
+    },
+    {
+      "section": "architecture.pluggable_retimed",
+      "metric": "retimer_total",
+      "value": 0.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "architecture.pluggable_retimed",
+      "metric": "lanes",
+      "value": 500.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "architecture.pluggable_retimed",
+      "metric": "link_margin_proxy_db",
+      "value": 0.4400000000000004,
+      "unit": "dB",
+      "note": ""
+    },
+    {
+      "section": "architecture.cpo_optical_io",
+      "metric": "energy_pj_per_bit",
+      "value": 8.173625,
+      "unit": "pJ/bit",
+      "note": ""
+    },
+    {
+      "section": "architecture.cpo_optical_io",
+      "metric": "package_power_w",
+      "value": 817.3625,
+      "unit": "W",
+      "note": ""
+    },
+    {
+      "section": "architecture.cpo_optical_io",
+      "metric": "latency_ns",
+      "value": 2.74,
+      "unit": "ns",
+      "note": ""
+    },
+    {
+      "section": "architecture.cpo_optical_io",
+      "metric": "retimer_total",
+      "value": 0.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "architecture.cpo_optical_io",
+      "metric": "lanes",
+      "value": 500.0,
+      "unit": "count",
+      "note": ""
+    },
+    {
+      "section": "architecture.cpo_optical_io",
+      "metric": "link_margin_proxy_db",
+      "value": 7.1,
+      "unit": "dB",
+      "note": ""
+    },
+    {
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "energy_pj_per_bit",
+      "value": 4.945,
+      "unit": "pJ/bit",
+      "note": ""
+    },
+    {
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "package_power_w",
+      "value": 494.5,
+      "unit": "W",
+      "note": ""
+    },
+    {
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "latency_ns",
+      "value": 1.8499999999999996,
+      "unit": "ns",
+      "note": ""
+    },
+    {
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "retimer_total",
+      "value": 0.0,
+      "unit": "count",
+      "note": ""
+    }
+  ]
+}
