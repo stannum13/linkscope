@@ -29,6 +29,7 @@ from photon_link_lab.plots import (
     save_wdm_sweep,
     save_yield_histogram,
 )
+from photon_link_lab.report import write_project_report
 from photon_link_lab.scoreboard import (
     build_scoreboard,
     run_scoreboard_benchmark,
@@ -421,6 +422,27 @@ def dashboard_cmd(args: argparse.Namespace) -> None:
     print(out)
 
 
+def report_cmd(args: argparse.Namespace) -> None:
+    report = write_project_report(
+        out=args.out,
+        json_out=args.json_out,
+        manifest_path=args.manifest,
+    )
+    health = report["health"]
+    print(
+        json.dumps(
+            {
+                "out": args.out,
+                "json_out": args.json_out,
+                "status": health["status"],
+                "available_artifacts": health["available_artifacts"],
+                "expected_artifacts": health["expected_artifacts"],
+            },
+            indent=2,
+        )
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Silicon-photonic optical link simulator")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -548,6 +570,12 @@ def build_parser() -> argparse.ArgumentParser:
     dash.add_argument("--cpo", default="../../plots/cpo_scenarios.png")
     dash.add_argument("--scoreboard", default="../../plots/benchmark_v2_scoreboard.png")
     dash.set_defaults(func=dashboard_cmd)
+
+    report = sub.add_parser("report", help="generate recruiter-friendly repository health report")
+    report.add_argument("--out", default="artifacts/demo/recruiter_report.md")
+    report.add_argument("--json-out", default="artifacts/demo/recruiter_report.json")
+    report.add_argument("--manifest", default="data/benchmarks/manifest.json")
+    report.set_defaults(func=report_cmd)
     return parser
 
 

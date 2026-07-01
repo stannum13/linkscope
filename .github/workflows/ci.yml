@@ -4,9 +4,17 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
@@ -29,8 +37,12 @@ jobs:
         run: |
           photon-link benchmark --symbols 256 --yield-samples 4 --yield-symbols 128
           photon-link dashboard --out artifacts/demo/dashboard.html
+          photon-link report
           test -f data/benchmarks/tx_power_sweep.csv
           test -f data/benchmarks/thermal_drift_sweep.csv
           test -f data/benchmarks/yield_monte_carlo.csv
+          test -f data/benchmarks/benchmark_v2_scoreboard.csv
           test -f artifacts/demo/link_metrics.json
+          test -f artifacts/demo/recruiter_report.md
+          test -f artifacts/demo/recruiter_report.json
           test -f plots/eye_diagram.png

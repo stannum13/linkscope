@@ -1,0 +1,401 @@
+{
+  "schema": "photon-link-lab.recruiter-report.v1",
+  "project": {
+    "name": "photon-link-lab",
+    "benchmark": "photon-link-lab.v1",
+    "manifest": "data/benchmarks/manifest.json",
+    "symbols": 512,
+    "yield_samples": 8
+  },
+  "health": {
+    "status": "complete",
+    "available_artifacts": 19,
+    "expected_artifacts": 19,
+    "scoreboard_rows": 39,
+    "key_link_metrics": 7
+  },
+  "generated_benchmark_files": [
+    {
+      "name": "measured_data",
+      "path": "data/measured/fake_measured_ring_sweep.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 644,
+      "columns": [
+        "wavelength_nm",
+        "heater_mw",
+        "measured_transmission_db",
+        "true_transmission_db"
+      ]
+    },
+    {
+      "name": "tx_power_sweep",
+      "path": "data/benchmarks/tx_power_sweep.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 10,
+      "columns": [
+        "tx_laser_power_dbm",
+        "ber",
+        "ser",
+        "q_factor_eye",
+        "rx_optical_power_dbm",
+        "photocurrent_uA"
+      ]
+    },
+    {
+      "name": "thermal_drift_sweep",
+      "path": "data/benchmarks/thermal_drift_sweep.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 13,
+      "columns": [
+        "thermal_shift_nm",
+        "ber",
+        "ser",
+        "q_factor_eye",
+        "rx_voltage_pp_mV"
+      ]
+    },
+    {
+      "name": "yield_monte_carlo",
+      "path": "data/benchmarks/yield_monte_carlo.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 8,
+      "columns": [
+        "sample",
+        "ber",
+        "q_factor_eye",
+        "pass"
+      ]
+    },
+    {
+      "name": "wdm_sweep",
+      "path": "data/benchmarks/wdm_sweep.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 4,
+      "columns": [
+        "channel",
+        "wavelength_nm",
+        "rx_optical_power_dbm",
+        "ber",
+        "q_factor_eye",
+        "crosstalk_power_ratio",
+        "crosstalk_penalty_factor",
+        "crosstalk_penalty_db",
+        "dispersion_band_skew_ui"
+      ]
+    },
+    {
+      "name": "wafer_grid",
+      "path": "data/benchmarks/wafer_grid.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 81,
+      "columns": [
+        "die_index",
+        "row",
+        "col",
+        "x_mm",
+        "y_mm",
+        "radius_norm",
+        "resonance_wavelength_nm",
+        "resonance_shift_nm",
+        "q_factor",
+        "insertion_loss_db",
+        "responsivity_a_per_w",
+        "yield_score",
+        "pass"
+      ]
+    },
+    {
+      "name": "wafer_summary",
+      "path": "artifacts/demo/wafer_summary.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "failed_die",
+        "mean_yield_score",
+        "median_yield_score",
+        "min_yield_score",
+        "passed_die",
+        "total_die",
+        "yield_fraction",
+        "yield_percent"
+      ]
+    },
+    {
+      "name": "cpo_scenarios",
+      "path": "data/benchmarks/cpo_scenarios.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 2,
+      "columns": [
+        "name",
+        "aggregate_bandwidth_tbps",
+        "lane_rate_gbps",
+        "lanes",
+        "wdm_channels",
+        "copper_trace_cm",
+        "electrical_loss_db",
+        "retimers_per_lane",
+        "retimer_total",
+        "energy_pj_per_bit",
+        "package_power_w",
+        "latency_ns",
+        "heater_power_w",
+        "link_margin_proxy_db",
+        "pluggable_optics"
+      ]
+    },
+    {
+      "name": "cpo_summary",
+      "path": "artifacts/demo/cpo_scenarios.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "scenarios"
+      ]
+    },
+    {
+      "name": "benchmark_v2_scoreboard",
+      "path": "data/benchmarks/benchmark_v2_scoreboard.csv",
+      "kind": "csv",
+      "exists": true,
+      "rows": 39,
+      "columns": [
+        "section",
+        "metric",
+        "value",
+        "unit",
+        "note"
+      ]
+    },
+    {
+      "name": "benchmark_v2_summary",
+      "path": "artifacts/demo/benchmark_v2_scoreboard.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "rows",
+        "schema"
+      ]
+    },
+    {
+      "name": "link_metrics",
+      "path": "artifacts/demo/link_metrics.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "budget",
+        "metrics"
+      ]
+    },
+    {
+      "name": "calibration",
+      "path": "artifacts/demo/calibration.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "extinction_ratio_db",
+        "insertion_loss_db",
+        "n_points",
+        "q_factor",
+        "resonance_wavelength_nm",
+        "rmse_db"
+      ]
+    },
+    {
+      "name": "heater_tuning",
+      "path": "artifacts/demo/heater_tuning.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "ber",
+        "heater_mw",
+        "observations",
+        "score"
+      ]
+    },
+    {
+      "name": "compact_model",
+      "path": "artifacts/demo/compact_model.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "format",
+        "model",
+        "units"
+      ]
+    },
+    {
+      "name": "veriloga_style",
+      "path": "artifacts/demo/ring_behavioral.va",
+      "kind": "va",
+      "exists": true
+    },
+    {
+      "name": "surrogate",
+      "path": "artifacts/demo/surrogate.json",
+      "kind": "json",
+      "exists": true,
+      "top_level_keys": [
+        "design_parameter_names",
+        "feature_names",
+        "format",
+        "metrics",
+        "model",
+        "target_names"
+      ]
+    },
+    {
+      "name": "scoreboard_plot",
+      "path": "plots/benchmark_v2_scoreboard.png",
+      "kind": "png",
+      "exists": true
+    },
+    {
+      "name": "plots",
+      "path": "plots",
+      "kind": "directory",
+      "exists": true,
+      "file_count": 10
+    }
+  ],
+  "key_link_metrics": [
+    {
+      "label": "Line rate",
+      "metric": "line_rate_gbps",
+      "value": 112.0,
+      "unit": "Gb/s",
+      "source": "link_metrics.metrics.line_rate_gbps"
+    },
+    {
+      "label": "Empirical BER",
+      "metric": "ber",
+      "value": 0.1220703125,
+      "unit": "ratio",
+      "source": "link_metrics.metrics.ber"
+    },
+    {
+      "label": "BER upper 95%",
+      "metric": "ber_upper_95",
+      "value": 0.14158280668015458,
+      "unit": "ratio",
+      "source": "link_metrics.metrics.ber_upper_95"
+    },
+    {
+      "label": "FEC margin",
+      "metric": "fec_margin_db",
+      "value": -28.499805216919082,
+      "unit": "dB",
+      "source": "link_metrics.metrics.fec_margin_db"
+    },
+    {
+      "label": "Eye Q",
+      "metric": "q_factor_eye",
+      "value": 0.9996480418593198,
+      "unit": "ratio",
+      "source": "link_metrics.metrics.q_factor_eye"
+    },
+    {
+      "label": "RX optical power",
+      "metric": "rx_optical_power_dbm",
+      "value": -5.831276076630618,
+      "unit": "dBm",
+      "source": "link_metrics.budget.rx_optical_power_dbm"
+    },
+    {
+      "label": "Static link margin",
+      "metric": "static_margin_db",
+      "value": 10.296562490566735,
+      "unit": "dB",
+      "source": "link_metrics.budget.static_margin_db"
+    }
+  ],
+  "scoreboard_highlights": [
+    {
+      "label": "Line rate",
+      "section": "link_core",
+      "metric": "line_rate_gbps",
+      "value": 112.0,
+      "unit": "Gb/s"
+    },
+    {
+      "label": "BER upper 95%",
+      "section": "link_core",
+      "metric": "ber_upper_95",
+      "value": 0.14158280668015458,
+      "unit": "ratio"
+    },
+    {
+      "label": "FEC margin",
+      "section": "link_core",
+      "metric": "fec_margin_db",
+      "value": -28.499805216919082,
+      "unit": "dB"
+    },
+    {
+      "label": "WDM worst BER",
+      "section": "wdm_worst_channel",
+      "metric": "ber",
+      "value": 0.14391595780371869,
+      "unit": "ratio"
+    },
+    {
+      "label": "Wafer yield",
+      "section": "wafer_proxy",
+      "metric": "yield_percent",
+      "value": 82.71604938271605,
+      "unit": "%"
+    },
+    {
+      "label": "Surrogate BER MAE",
+      "section": "surrogate",
+      "metric": "mae_log10_ber",
+      "value": 0.3429767056015855,
+      "unit": "log10(BER)"
+    },
+    {
+      "label": "CPO energy improvement",
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "energy_pj_per_bit",
+      "value": 4.945,
+      "unit": "pJ/bit"
+    },
+    {
+      "label": "CPO package power improvement",
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "package_power_w",
+      "value": 494.5,
+      "unit": "W"
+    },
+    {
+      "label": "CPO latency improvement",
+      "section": "architecture_delta.pluggable_minus_cpo",
+      "metric": "latency_ns",
+      "value": 1.8499999999999996,
+      "unit": "ns"
+    }
+  ],
+  "verification_commands": [
+    {
+      "label": "Run the test suite",
+      "command": "python -m pytest"
+    },
+    {
+      "label": "Regenerate benchmark artifacts",
+      "command": "python -m photon_link_lab.cli benchmark --out data/benchmarks --artifacts artifacts/demo --plots plots --measured data/measured --symbols 512 --yield-samples 8"
+    },
+    {
+      "label": "Regenerate benchmark-v2 scoreboard",
+      "command": "python -m photon_link_lab.cli benchmark-v2 --out data/benchmarks/benchmark_v2_scoreboard.csv --summary artifacts/demo/benchmark_v2_scoreboard.json --plot plots/benchmark_v2_scoreboard.png"
+    },
+    {
+      "label": "Regenerate this report",
+      "command": "python -m photon_link_lab.cli report --out artifacts/demo/recruiter_report.md --json-out artifacts/demo/recruiter_report.json"
+    }
+  ]
+}

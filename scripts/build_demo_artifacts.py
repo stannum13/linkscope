@@ -37,6 +37,7 @@ def run() -> None:
     else:
         main(["benchmark"])
     main(["dashboard", "--out", "artifacts/demo/dashboard.html"])
+    main(["report"])
 
 
 if __name__ == "__main__":

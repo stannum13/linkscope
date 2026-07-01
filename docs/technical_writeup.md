@@ -17,6 +17,8 @@ The goal is architecture exploration and validation workflow prototyping. It is
 not a replacement for electromagnetic simulation, SPICE, Verilog-A signoff, or
 silicon lab measurement.
 
+For a shorter portfolio entry point, see the [recruiter brief](recruiter_brief.md).
+
 ## Signal Chain
 
 The implemented chain is:

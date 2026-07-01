@@ -1,12 +1,25 @@
 # Photon Link Lab
 
-A Python/JAX-ready simulator for a silicon-photonic optical link, from PAM4/NRZ
-symbols through modulator, channel, photodiode/TIA, equalization, eye metrics,
-BER estimation, calibration, and heater tuning.
+A Python package for behavioral silicon-photonic optical link simulation, from
+PAM4/NRZ symbols through modulator, channel, photodiode/TIA, equalization, eye
+metrics, BER estimation, calibration, and heater tuning. It uses NumPy by
+default and includes an optional JAX array-backend path for future
+differentiable kernels.
 
-The project is organized as an engineering artifact: package code, CLI,
-deterministic datasets, tests, plots, CI, notebooks, and a technical write-up.
-Notebooks are walkthroughs only; the simulator lives in `src/photon_link_lab`.
+The project is organized as a portfolio-ready engineering artifact: importable
+package code, CLI, deterministic datasets, tests, plots, CI, notebooks, a static
+dashboard, and technical documentation. Notebooks are walkthroughs only; the
+simulator lives in `src/photon_link_lab`.
+
+## Portfolio Entry Points
+
+- [Recruiter brief](docs/recruiter_brief.md): role signal, review artifacts,
+  commands, current capabilities, and limitations.
+- [Technical write-up](docs/technical_writeup.md): model assumptions,
+  validation strategy, calibration flow, WDM, wafer variation, CPO scenarios,
+  and benchmark scoreboard scope.
+- [Requirements traceability](docs/requirements_traceability.md): mapping from
+  prompt requirements to package, CLI, data, plots, tests, CI, and docs.
 
 ## System Diagram
 
@@ -36,6 +49,7 @@ python -m photon_link_lab.cli simulate --out artifacts/demo
 python -m photon_link_lab.cli benchmark
 python -m photon_link_lab.cli benchmark-v2
 python -m photon_link_lab.cli dashboard --out artifacts/demo/dashboard.html
+python -m photon_link_lab.cli report
 ```
 
 Installed entry point:
@@ -51,6 +65,7 @@ photon-link wdm --out data/benchmarks/wdm_sweep.csv
 photon-link cpo --out data/benchmarks/cpo_scenarios.csv
 photon-link benchmark-v2 --out data/benchmarks/benchmark_v2_scoreboard.csv
 photon-link tune --thermal-shift-nm 0.12
+photon-link report --out artifacts/demo/recruiter_report.md
 photon-link benchmark
 ```
 
@@ -118,13 +133,15 @@ FEC_margin_dB = 10 log10(BER_FEC_threshold / BER_upper,95)
 
 ## Current Results
 
-The canonical command is:
+The canonical artifact bundle is regenerated with:
 
 ```bash
 python -m photon_link_lab.cli benchmark
+python -m photon_link_lab.cli dashboard --out artifacts/demo/dashboard.html
+python -m photon_link_lab.cli report
 ```
 
-It regenerates:
+Together these commands regenerate:
 
 | Artifact | Path |
 |---|---|
@@ -141,6 +158,7 @@ It regenerates:
 | Heater tuning result | `artifacts/demo/heater_tuning.json` |
 | Surrogate report | `artifacts/demo/surrogate.json` |
 | Benchmark v2 summary | `artifacts/demo/benchmark_v2_scoreboard.json` |
+| Recruiter health report | `artifacts/demo/recruiter_report.md` |
 | Dashboard | `artifacts/demo/dashboard.html` |
 
 Current quick-demo metrics:

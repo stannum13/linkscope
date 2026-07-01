@@ -124,6 +124,31 @@ def test_cli_smoke_paths(tmp_path) -> None:
     assert (tmp_path / "scoreboard.json").exists()
     assert (tmp_path / "scoreboard.png").exists()
 
+    manifest = tmp_path / "report_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "benchmark": "photon-link-lab.v1",
+                "artifacts": {
+                    "link_metrics": str(tmp_path / "artifacts" / "link_metrics.json"),
+                    "benchmark_v2_scoreboard": str(tmp_path / "scoreboard.csv"),
+                    "benchmark_v2_summary": str(tmp_path / "scoreboard.json"),
+                },
+            }
+        )
+    )
+    run_cli(
+        "report",
+        "--manifest",
+        str(manifest),
+        "--out",
+        str(tmp_path / "recruiter_report.md"),
+        "--json-out",
+        str(tmp_path / "recruiter_report.json"),
+    )
+    assert (tmp_path / "recruiter_report.md").exists()
+    assert (tmp_path / "recruiter_report.json").exists()
+
 
 def test_cli_benchmark_smoke(tmp_path) -> None:
     run_cli(
