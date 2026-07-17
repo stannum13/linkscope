@@ -1,0 +1,20 @@
+{
+  "ber": 0.1220703125,
+  "ber_proxy": 0.1220703125,
+  "ber_upper_95": 0.14354592646416847,
+  "bit_errors": 125.0,
+  "canonical_quality_result": false,
+  "experiment_id": "e001",
+  "mode": "smoke",
+  "notes": [
+    "Smoke output validates local corrected BER accounting and drift sweep generation only.",
+    "It is not a SAX/OptiCommPy canonical joint-adaptation result."
+  ],
+  "ser": 0.244140625,
+  "ser_upper_95": 0.28316561336030915,
+  "status": "local_smoke_passed",
+  "symbol_errors": 125.0,
+  "symbols": 512,
+  "worst_smoke_drift_ber": 0.1513671875,
+  "worst_smoke_drift_nm": 0.12
+}

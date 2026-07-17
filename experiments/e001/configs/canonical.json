@@ -1,0 +1,48 @@
+{
+  "experiment_id": "e001",
+  "mode": "canonical",
+  "enabled": false,
+  "blocked_reason": "SAX-to-OptiCommPy bridge, matched budget policy, and canonical run budget are not implemented in this repository yet.",
+  "upstream": {
+    "sax": {
+      "repository": "https://github.com/flaport/sax",
+      "commit": "910ea69480d479cbbe4e1f23225888ed76d98166",
+      "package": "sax==0.18.2"
+    },
+    "opticommpy": {
+      "repository": "https://github.com/edsonportosilva/OptiCommPy",
+      "commit": "a9ed07a188099b4f62acf07399a68a33d0e48a21",
+      "package": "opticommpy==0.10.0"
+    }
+  },
+  "seed": 17,
+  "pam_order": 4,
+  "process_variation_seeds": 20,
+  "thermal_shifts_nm": [-0.2, -0.1, 0.0, 0.1, 0.2],
+  "baselines": [
+    "fixed_bias_fixed_equalizer",
+    "optical_recalibration_only",
+    "ffe_adaptation_only",
+    "oracle_resonance_and_channel"
+  ],
+  "treatment": "joint_ring_bias_calibration_and_ffe_adaptation",
+  "controls": [
+    "no_thermal_shift",
+    "no_process_variation",
+    "perfect_nominal_model",
+    "matched_training_symbols",
+    "ring_model_perturbation"
+  ],
+  "metrics": [
+    "ber",
+    "ser",
+    "ber_upper_95",
+    "ser_upper_95",
+    "eye_opening",
+    "training_symbols",
+    "detector_measurements",
+    "recovery_time",
+    "heater_cost",
+    "worst_seed_ber"
+  ]
+}

@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "linkscope"
+version = "0.1.0"
+description = "LinkScope: silicon-photonic link simulation with calibration, drift, and BER accounting."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "LinkScope contributors" }]
+keywords = [
+  "silicon-photonics",
+  "optical-links",
+  "pam4",
+  "linkscope",
+  "simulation",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "matplotlib>=3.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/stannum13/linkscope"
+Repository = "https://github.com/stannum13/linkscope"
+Issues = "https://github.com/stannum13/linkscope/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+linkscope = "photon_link_lab.cli:main"
+photon-link = "photon_link_lab.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/photon_link_lab"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

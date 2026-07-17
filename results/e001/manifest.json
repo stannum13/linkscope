@@ -1,0 +1,45 @@
+{
+  "artifacts": {
+    "figure_svg": "results/e001/figure.svg",
+    "summary_csv": "results/e001/summary.csv",
+    "summary_json": "results/e001/summary.json"
+  },
+  "config_path": "experiments/e001/configs/smoke.json",
+  "config_sha256": "b5f3b98cf9e67af345121ca38f982b641211b7088d966de8d8a451960f04b186",
+  "drift_rows": [
+    {
+      "ber": 0.1240234375,
+      "q_factor_eye": 0.9068080417890988,
+      "rx_voltage_pp_mV": 158.37931769368848,
+      "ser": 0.248046875,
+      "thermal_shift_nm": -0.12
+    },
+    {
+      "ber": 0.1220703125,
+      "q_factor_eye": 0.9996480418593198,
+      "rx_voltage_pp_mV": 176.79623379106047,
+      "ser": 0.244140625,
+      "thermal_shift_nm": 0.0
+    },
+    {
+      "ber": 0.1513671875,
+      "q_factor_eye": 0.7851427548761318,
+      "rx_voltage_pp_mV": 45.46472179460614,
+      "ser": 0.302734375,
+      "thermal_shift_nm": 0.12
+    }
+  ],
+  "generated_at": "2026-07-17T06:51:15.671084+00:00",
+  "upstream": {
+    "opticommpy": {
+      "commit": "a9ed07a188099b4f62acf07399a68a33d0e48a21",
+      "package": "opticommpy==0.10.0",
+      "repository": "https://github.com/edsonportosilva/OptiCommPy"
+    },
+    "sax": {
+      "commit": "910ea69480d479cbbe4e1f23225888ed76d98166",
+      "package": "sax==0.18.2",
+      "repository": "https://github.com/flaport/sax"
+    }
+  }
+}

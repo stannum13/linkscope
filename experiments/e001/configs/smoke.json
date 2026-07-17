@@ -1,0 +1,26 @@
+{
+  "experiment_id": "e001",
+  "mode": "smoke",
+  "description": "Validate corrected Gray-coded BER accounting and retained LinkScope artifact generation without claiming a canonical SAX/OptiCommPy result.",
+  "upstream": {
+    "sax": {
+      "repository": "https://github.com/flaport/sax",
+      "commit": "910ea69480d479cbbe4e1f23225888ed76d98166",
+      "package": "sax==0.18.2"
+    },
+    "opticommpy": {
+      "repository": "https://github.com/edsonportosilva/OptiCommPy",
+      "commit": "a9ed07a188099b4f62acf07399a68a33d0e48a21",
+      "package": "opticommpy==0.10.0"
+    }
+  },
+  "seed": 7,
+  "symbols": 512,
+  "drift_nm": [-0.12, 0.0, 0.12],
+  "expected_artifacts": [
+    "results/e001/manifest.json",
+    "results/e001/summary.json",
+    "results/e001/summary.csv",
+    "results/e001/figure.svg"
+  ]
+}

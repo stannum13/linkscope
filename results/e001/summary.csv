@@ -1,0 +1,2 @@
+experiment_id,mode,status,canonical_quality_result,symbols,ber,ber_proxy,ser,bit_errors,symbol_errors,ber_upper_95,ser_upper_95,worst_smoke_drift_nm,worst_smoke_drift_ber
+e001,smoke,local_smoke_passed,False,512,0.1220703125,0.1220703125,0.244140625,125.0,125.0,0.14354592646416847,0.28316561336030915,0.12,0.1513671875

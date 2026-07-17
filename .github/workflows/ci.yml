@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check .
+      - name: Test
+        run: pytest
+      - name: CLI smoke artifact build
+        env:
+          MPLBACKEND: Agg
+        run: |
+          linkscope benchmark --symbols 256 --yield-samples 4 --yield-symbols 128
+          scripts/reproduce_e001.sh experiments/e001/configs/smoke.json
+          test -f data/benchmarks/tx_power_sweep.csv
+          test -f data/benchmarks/thermal_drift_sweep.csv
+          test -f data/benchmarks/yield_monte_carlo.csv
+          test -f artifacts/core/link_metrics.json
+          test -f artifacts/core/calibration.json
+          test -f artifacts/core/heater_tuning.json
+          test -f plots/eye_diagram.png
+          test -f plots/thermal_drift.png
+          test -f results/e001/summary.json
